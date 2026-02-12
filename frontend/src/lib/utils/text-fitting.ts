@@ -38,7 +38,8 @@ export function autoFitFontSize(
 	maxHeight: number,
 	fontFamily: string,
 	isBold: boolean,
-	noWrap: boolean
+	noWrap: boolean,
+	isItalic: boolean = false
 ): number {
 	const canvas = document.createElement('canvas');
 	const ctx = canvas.getContext('2d')!;
@@ -50,7 +51,8 @@ export function autoFitFontSize(
 	while (lo <= hi) {
 		const mid = Math.floor((lo + hi) / 2);
 		const weight = isBold ? 'bold' : 'normal';
-		ctx.font = `${weight} ${mid}px "${fontFamily}"`;
+		const style = isItalic ? 'italic' : 'normal';
+		ctx.font = `${style} ${weight} ${mid}px "${fontFamily}"`;
 
 		let fits: boolean;
 		if (noWrap) {

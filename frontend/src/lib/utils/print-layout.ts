@@ -14,17 +14,46 @@ export function calculateLayout(
 	ticketType: TicketType,
 	totalTickets: number
 ): LayoutResult {
-	const landscape = ticketType === 'ticket' || ticketType === 'certificate';
-	const orientation = landscape ? 'landscape' : 'portrait';
+	let ticketsPerRow: number;
+	let ticketsPerCol: number;
+	let orientation: 'landscape' | 'portrait';
 
-	const pageW = landscape ? A4_HEIGHT : A4_WIDTH;
-	const pageH = landscape ? A4_WIDTH : A4_HEIGHT;
+	switch (ticketType) {
+		case 'ticket':
+			ticketsPerRow = 2;
+			ticketsPerCol = 4;
+			orientation = 'landscape';
+			break;
+		case 'convention-id':
+			ticketsPerRow = 2;
+			ticketsPerCol = 2;
+			orientation = 'portrait';
+			break;
+		case 'certificate':
+			ticketsPerRow = 1;
+			ticketsPerCol = 1;
+			orientation = 'landscape';
+			break;
+		case 'others':
+		default: {
+			// For custom sizes, dynamically calculate
+			const landscape = ticketWidth > ticketHeight;
+			orientation = landscape ? 'landscape' : 'portrait';
+			const pageW = landscape ? A4_HEIGHT : A4_WIDTH;
+			const pageH = landscape ? A4_WIDTH : A4_HEIGHT;
+			const availW = pageW - MARGIN * 2;
+			const availH = pageH - MARGIN * 2;
+			ticketsPerRow = Math.max(1, Math.floor((availW + gap) / (ticketWidth + gap)));
+			ticketsPerCol = Math.max(1, Math.floor((availH + gap) / (ticketHeight + gap)));
+			break;
+		}
+	}
 
+	const pageW = orientation === 'landscape' ? A4_HEIGHT : A4_WIDTH;
+	const pageH = orientation === 'landscape' ? A4_WIDTH : A4_HEIGHT;
 	const availableWidth = pageW - MARGIN * 2;
 	const availableHeight = pageH - MARGIN * 2;
 
-	const ticketsPerRow = Math.max(1, Math.floor((availableWidth + gap) / (ticketWidth + gap)));
-	const ticketsPerCol = Math.max(1, Math.floor((availableHeight + gap) / (ticketHeight + gap)));
 	const ticketsPerPage = ticketsPerRow * ticketsPerCol;
 	const totalPages = Math.ceil(totalTickets / ticketsPerPage);
 

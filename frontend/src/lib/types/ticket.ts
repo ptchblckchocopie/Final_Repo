@@ -22,6 +22,10 @@ export interface TextStyles {
 	color: string;
 	fontFamily: string;
 	fontBold: boolean;
+	fontItalic: boolean;
+	fontUnderline: boolean;
+	backgroundColor: string;
+	opacity: number;
 	horizontalAlign: HAlign;
 	verticalAlign: VAlign;
 }
@@ -145,6 +149,10 @@ export function createDefaultTextElement(overrides?: Partial<TextElement>): Text
 			color: '#000000',
 			fontFamily: 'Arial',
 			fontBold: false,
+			fontItalic: false,
+			fontUnderline: false,
+			backgroundColor: '',
+			opacity: 1,
 			horizontalAlign: 'left',
 			verticalAlign: 'top'
 		},

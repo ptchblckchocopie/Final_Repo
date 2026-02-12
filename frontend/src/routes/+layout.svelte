@@ -18,7 +18,7 @@
 
 <div class="flex min-h-screen flex-col bg-gray-50">
 	<Navbar />
-	<main class="{isTicketGenerator ? '' : 'pt-16'} flex-1">
+	<main class="pt-16 flex-1">
 		{@render children()}
 	</main>
 	{#if !isTicketGenerator}

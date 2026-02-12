@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ticket Generator</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsbarcode/3.11.5/JsBarcode.all.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-ticket-alt"></i> Ticket Generator</h1>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-button active" onclick="switchTab('design')">Design</button>
+            <button class="tab-button" onclick="switchTab('preview')">Printable Preview</button>
+            <button class="tab-button" onclick="switchTab('png-export')">Export as PNG's</button>
+        </div>
+
+        <div id="design-tab" class="tab-content active">
+            <button class="mobile-sidebar-toggle" onclick="toggleMobileSidebar()">
+                <i class="fas fa-cog"></i> Tools
+            </button>
+            <div class="sidebar" id="sidebar">
+                <div class="section">
+                    <h3>Upload Files</h3>
+                    <div class="file-upload">
+                        <label for="csv-upload">
+                            <i class="fas fa-file-csv"></i> Upload CSV
+                        </label>
+                        <input type="file" id="csv-upload" accept=".csv" onchange="handleCSVUpload(event)">
+                    </div>
+                    <div class="file-upload">
+                        <label for="bg-upload">
+                            <i class="fas fa-image"></i> Upload Background
+                        </label>
+                        <input type="file" id="bg-upload" accept=".jpg,.jpeg,.png" onchange="handleBackgroundUpload(event)">
+                    </div>
+                    <div class="fit-mode-control">
+                        <label>Background Fit:
+                            <select id="bg-fit-mode" onchange="updateBackgroundFitMode()">
+                                <option value="cover" selected>Cover</option>
+                                <option value="contain">Contain/Fit</option>
+                                <option value="stretch">Stretch</option>
+                                <option value="original">Original</option>
+                            </select>
+                        </label>
+                    </div>
+                    <hr style="margin: 15px 0; border: none; border-top: 1px solid #dee2e6;">
+                    <div class="template-actions">
+                        <label>Templates:
+                            <select id="template-select" style="width: 100%; margin-top: 5px;">
+                                <option value="">-- Select Template --</option>
+                            </select>
+                        </label>
+                        <div class="template-buttons">
+                            <button onclick="loadSelectedTemplate()" class="template-btn load-btn"><i class="fas fa-folder-open"></i> Load</button>
+                            <button onclick="saveAsTemplate()" class="template-btn save-btn"><i class="fas fa-save"></i> Save Current</button>
+                            <button onclick="deleteSelectedTemplate()" class="template-btn delete-template-btn"><i class="fas fa-trash"></i> Delete</button>
+                        </div>
+                    </div>
+                    <hr style="margin: 15px 0; border: none; border-top: 1px solid #dee2e6;">
+                    <div class="project-actions">
+                        <button onclick="exportProject()" class="export-btn">
+                            <i class="fas fa-download"></i> Export Project
+                        </button>
+                        <div class="file-upload">
+                            <label for="project-import">
+                                <i class="fas fa-upload"></i> Import Project
+                            </label>
+                            <input type="file" id="project-import" accept=".veenttix" onchange="importProject(event)">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>Ticket Size</h3>
+                    <div class="size-inputs">
+                        <label>Ticket Type:
+                            <select id="ticket-type" onchange="updateTicketType()">
+                                <option value="ticket">Ticket</option>
+                                <option value="convention-id">Convention ID</option>
+                                <option value="certificate">Certificate</option>
+                                <option value="others">Others</option>
+                            </select>
+                        </label>
+                        <div id="manual-size-inputs" style="display: none;">
+                            <label>Width (mm): <input type="number" id="ticket-width" value="85" onchange="updateTicketSize()"></label>
+                            <label>Height (mm): <input type="number" id="ticket-height" value="54" onchange="updateTicketSize()"></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>CSV Headers</h3>
+                    <div id="csv-headers" class="headers-list">
+                        <p class="no-csv">Upload a CSV file to see headers</p>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>Elements List</h3>
+                    <div id="elements-list" class="elements-list">
+                        <p class="no-elements">No elements added yet</p>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>Ticket Label Color</h3>
+                    <label>Label Column:
+                        <select id="label-column" onchange="updateLabelColumn()" style="width: 100%; margin-top: 5px;">
+                            <option value="">None</option>
+                        </select>
+                    </label>
+                    <div id="label-color-assignments" style="margin-top: 10px; max-height: 150px; overflow-y: auto;"></div>
+                    <div id="label-block-controls" style="display: none; margin-top: 10px;">
+                        <label>Block Width: <span id="label-block-width-value">50px</span>
+                            <input type="range" id="label-block-width" min="5" max="80" value="50" oninput="document.getElementById('label-block-width-value').textContent = this.value + 'px'" onchange="updateLabelBlockWidth()" style="width: 100%;">
+                        </label>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>QR / Barcode</h3>
+                    <label>Data Column:
+                        <select id="qr-column" style="width: 100%; margin-top: 5px;">
+                            <option value="">-- Select Column --</option>
+                        </select>
+                    </label>
+                    <div style="margin-top: 10px;">
+                        <button onclick="addQRCodeFromSection()" class="template-btn load-btn" style="width: 100%;">
+                        <div class="section">
+    <h3>QR / Barcode</h3>
+    <label>Data Column:
+        <select id="qr-column" style="width: 100%; margin-top: 5px;">
+            <option value="">-- Select Column --</option>
+        </select>
+    </label>
+    <div style="margin-top: 10px;">
+        <button onclick="addQRCodeFromSection()" class="template-btn load-btn" style="width: 100%;">
+            <i class="fas fa-qrcode"></i> Add QR/Barcode to Canvas
+        </button>
+    </div>
+    <hr style="margin: 15px 0; border: none; border-top: 1px solid #dee2e6;">
+    <div style="margin-top: 10px;">
+        <label style="font-size: 13px; font-weight: bold; margin-bottom: 5px; display: block;">QR Code with Custom Logo:</label>
+        <div class="file-upload" style="margin-bottom: 8px;">
+            <label for="qr-logo-upload" style="font-size: 13px; padding: 8px;">
+                <i class="fas fa-image"></i> Upload Logo
+            </label>
+            <input type="file" id="qr-logo-upload" accept=".jpg,.jpeg,.png,.svg" onchange="handleQRLogoUpload(event)">
+        </div>
+        <button onclick="addQRCodeWithCustomLogo()" class="template-btn save-btn" style="width: 100%;" id="add-qr-custom-logo-btn" disabled>
+            <i class="fas fa-qrcode"></i> Add QR with Custom Logo
+        </button>
+        <small id="qr-logo-status" style="display: block; color: #999; margin-top: 5px; font-size: 11px;">No logo uploaded</small>
+    </div>
+</div>
+                                Examples: {price}PHP, ${amount}, Name: {name}
+                            </small>
+                            <div id="font-size-control">
+                                <label>Font Size: <input type="number" id="font-size" value="20" onchange="updateSelectedText()"></label>
+                            </div>
+                            <label>Font Color: <input type="color" id="font-color" value="#000000" onchange="updateSelectedText()"></label>
+                            <label>
+                                <input type="checkbox" id="font-bold" onchange="updateSelectedText()">
+                                Bold
+                            </label>
+                            <label>Font Family:
+                                <select id="font-family" onchange="updateSelectedText()">
+                                    <option value="Arial">Arial</option>
+                                    <option value="Georgia">Georgia</option>
+                                    <option value="Times New Roman">Times New Roman</option>
+                                    <option value="Courier New">Courier New</option>
+                                </select>
+                            </label>
+                            <label>Horizontal Align:
+                                <select id="horizontal-align" onchange="updateSelectedText()">
+                                    <option value="left">Left</option>
+                                    <option value="center" selected>Center</option>
+                                    <option value="right">Right</option>
+                                </select>
+                            </label>
+                            <label>Vertical Align:
+                                <select id="vertical-align" onchange="updateSelectedText()">
+                                    <option value="top">Top</option>
+                                    <option value="center" selected>Center</option>
+                                    <option value="bottom">Bottom</option>
+                                </select>
+                            </label>
+                            <label>Rotation: <span id="rotation-value" style="font-weight: bold;">0°</span>
+                                <small style="display: block; color: #666;">Drag the round handle above the element to rotate. Hold Shift to snap to 45°.</small>
+                            </label>
+                            <label>
+                                <input type="checkbox" id="allow-overflow" onchange="updateSelectedText()">
+                                Allow Text Overflow
+                            </label>
+                            <label>
+                                <input type="checkbox" id="contain-in-box" checked onchange="updateSelectedText()">
+                                Contain in Box
+                            </label>
+                            <label>
+                                <input type="checkbox" id="disable-new-line" checked onchange="updateSelectedText()">
+                                Disable New Line
+                            </label>
+                        </div>
+                        <div id="qr-controls" style="display: none;">
+                            <label>Code Type:
+                                <select id="code-type" onchange="updateSelectedQR()">
+                                    <option value="qr">QR Code</option>
+                                    <option value="barcode">Barcode</option>
+                                </select>
+                            </label>
+                            <label>Size: <input type="number" id="qr-size" value="100" min="50" max="300" onchange="updateSelectedQR()"></label>
+                            <div id="barcode-type-selection" style="display: none;">
+                                <label>Barcode Type:
+                                    <select id="barcode-type" onchange="updateSelectedQR()">
+                                        <option value="CODE128">CODE 128</option>
+                                        <option value="CODE39">CODE 39</option>
+                                        <option value="EAN13">EAN-13</option>
+                                        <option value="EAN8">EAN-8</option>
+                                        <option value="UPC">UPC-A</option>
+                                        <option value="ITF14">ITF-14</option>
+                                    </select>
+                                </label>
+                            </div>
+                            <label>Background: <input type="color" id="qr-background" value="#ffffff" onchange="updateSelectedQR()"></label>
+                            <label>Foreground: <input type="color" id="qr-foreground" value="#000000" onchange="updateSelectedQR()"></label>
+                        </div>
+                        <hr>
+                        <button onclick="resetElementPosition()" class="reset-btn">Reset Position</button>
+                        <button onclick="deleteSelectedElement()" class="delete-btn">Delete Element</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="design-area">
+                <div class="ticket-canvas" id="ticket-canvas">
+                    <div class="canvas-background" id="canvas-background"></div>
+                    <div class="text-elements" id="text-elements"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="preview-tab" class="tab-content">
+            <div class="preview-controls">
+                <h3>Print Layout</h3>
+                <div class="layout-controls">
+                    <label>Gap between tickets (mm): <input type="number" id="ticket-gap" value="2" min="0" max="10" onchange="updatePreview()"></label>
+                    <button onclick="generatePrint()" class="print-btn"><i class="fas fa-print"></i> Print</button>
+                </div>
+                <div class="preview-stats" id="preview-stats" style="margin-top: 10px; font-size: 14px; color: #666;">
+                    <p>Total tickets: <span id="total-tickets">0</span></p>
+                    <p>Total pages: <span id="total-pages">0</span></p>
+                    <p>Tickets per page: <span id="tickets-per-page">0</span></p>
+                </div>
+            </div>
+            <div class="preview-area">
+                <div class="a4-preview" id="a4-preview">
+                    <p>Preview will appear here after uploading CSV data</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="png-export-tab" class="tab-content">
+            <div class="png-controls">
+                <h3>PNG Export Settings</h3>
+                <div class="export-controls">
+                    <label>Image Quality:
+                        <select id="png-quality">
+                            <option value="1">Standard (72 DPI)</option>
+                            <option value="2" selected>High (144 DPI)</option>
+                            <option value="3">Print (216 DPI)</option>
+                        </select>
+                    </label>
+                    <button onclick="exportAllAsPNG()" class="export-png-btn"><i class="fas fa-file-archive"></i> Download PNG Package</button>
+                </div>
+                <div class="export-stats" id="export-stats" style="margin-top: 10px; font-size: 14px; color: #666;">
+                    <p>Total tickets to export: <span id="total-export-tickets">0</span></p>
+                    <p>Export progress: <span id="export-progress">0/0</span></p>
+                </div>
+            </div>
+            <div class="png-preview-area">
+                <div class="png-tickets-grid" id="png-tickets-grid">
+                    <p>PNG previews will appear here after uploading CSV data</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Mobile Sticky Footer for Text Properties -->
+    <div id="mobile-text-properties" class="mobile-text-properties">
+        <div class="mobile-properties-header">
+            <h4>Text Properties</h4>
+            <button class="mobile-properties-close" onclick="closeMobileProperties()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="mobile-properties-content">
+            <!-- Properties will be dynamically inserted here -->
+        </div>
+    </div>
+
+    <script src="templates.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

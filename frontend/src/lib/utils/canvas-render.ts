@@ -1,7 +1,7 @@
 import type { TicketElement, TextElement, QrElement, BackgroundFitMode, LabelConfig } from '$lib/types/ticket';
 import { formatTextWithData } from './format';
 import { autoFitFontSize, getWrappedLines, computeVerticalY } from './text-fitting';
-import { generateQR } from './qr-generator';
+import { generateQR, addLogoToQR } from './qr-generator';
 import { generateBarcode } from './barcode-generator';
 import { getLabelBlockRenderData } from './label-block';
 
@@ -56,6 +56,12 @@ function drawTextOnCanvas(
 
 	ctx.save();
 
+	// Apply opacity
+	const opacity = element.styles.opacity ?? 1;
+	if (opacity < 1) {
+		ctx.globalAlpha = opacity;
+	}
+
 	if (element.rotation !== 0) {
 		const cx = x + w / 2;
 		const cy = y + h / 2;
@@ -64,13 +70,20 @@ function drawTextOnCanvas(
 		ctx.translate(-cx, -cy);
 	}
 
+	// Draw background color
+	if (element.styles.backgroundColor) {
+		ctx.fillStyle = element.styles.backgroundColor;
+		ctx.fillRect(x, y, w, h);
+	}
+
 	let fontSize = element.styles.fontSize * quality;
 	if (element.containInBox) {
-		fontSize = autoFitFontSize(text, w, h, element.styles.fontFamily, element.styles.fontBold, element.disableNewLine) * quality;
+		fontSize = autoFitFontSize(text, w, h, element.styles.fontFamily, element.styles.fontBold, element.disableNewLine, element.styles.fontItalic) * quality;
 	}
 
 	const weight = element.styles.fontBold ? 'bold' : 'normal';
-	ctx.font = `${weight} ${fontSize}px "${element.styles.fontFamily}"`;
+	const style = element.styles.fontItalic ? 'italic' : 'normal';
+	ctx.font = `${style} ${weight} ${fontSize}px "${element.styles.fontFamily}"`;
 	ctx.fillStyle = element.styles.color;
 	ctx.textAlign = element.styles.horizontalAlign;
 	ctx.textBaseline = 'top';
@@ -91,7 +104,24 @@ function drawTextOnCanvas(
 	else if (element.styles.horizontalAlign === 'right') textX = x + w;
 
 	for (let i = 0; i < lines.length; i++) {
-		ctx.fillText(lines[i], textX, startY + i * lineHeight);
+		const lineY = startY + i * lineHeight;
+		ctx.fillText(lines[i], textX, lineY);
+
+		// Draw underline
+		if (element.styles.fontUnderline) {
+			const metrics = ctx.measureText(lines[i]);
+			const lineWidth = metrics.width;
+			let underlineX = textX;
+			if (element.styles.horizontalAlign === 'center') underlineX = textX - lineWidth / 2;
+			else if (element.styles.horizontalAlign === 'right') underlineX = textX - lineWidth;
+
+			ctx.beginPath();
+			ctx.strokeStyle = element.styles.color;
+			ctx.lineWidth = Math.max(1, fontSize / 16);
+			ctx.moveTo(underlineX, lineY + fontSize);
+			ctx.lineTo(underlineX + lineWidth, lineY + fontSize);
+			ctx.stroke();
+		}
 	}
 
 	ctx.restore();
@@ -117,6 +147,11 @@ async function drawCodeOnCanvas(
 	if (element.codeSettings.codeType === 'qr') {
 		const size = Math.min(w, h);
 		await generateQR(tmpCanvas, value, size, element.codeSettings.background, element.codeSettings.foreground);
+
+		// Add logo overlay if present
+		if (element.codeSettings.customLogo) {
+			await addLogoToQR(tmpCanvas, size, element.codeSettings.customLogo);
+		}
 	} else {
 		await generateBarcode(tmpCanvas, value, {
 			format: element.codeSettings.barcodeType,

@@ -19,11 +19,14 @@
 
 	let nodeEl: HTMLElement;
 
-	const displayText = $derived(
+	const formattedText = $derived(
 		previewData
 			? formatTextWithData(element.textFormat, previewData)
 			: element.textFormat
 	);
+
+	const isEmpty = $derived(!formattedText || formattedText.trim() === '');
+	const displayText = $derived(isEmpty ? element.textFormat : formattedText);
 
 	function handleDrag(id: string, x: number, y: number) {
 		updateElement(id, { position: { x, y } });
@@ -70,6 +73,10 @@
 		color: {element.styles.color};
 		font-family: '{element.styles.fontFamily}', sans-serif;
 		font-weight: {element.styles.fontBold ? 'bold' : 'normal'};
+		font-style: {element.styles.fontItalic ? 'italic' : 'normal'};
+		text-decoration: {element.styles.fontUnderline ? 'underline' : 'none'};
+		{element.styles.backgroundColor ? `background-color: ${element.styles.backgroundColor};` : ''}
+		opacity: {element.styles.opacity ?? 1};
 		text-align: {element.styles.horizontalAlign};
 		display: flex;
 		align-items: {element.styles.verticalAlign === 'top' ? 'flex-start' : element.styles.verticalAlign === 'bottom' ? 'flex-end' : 'center'};
@@ -87,7 +94,7 @@
 		onDragEnd: handleDragEnd
 	}}
 >
-	<span class="pointer-events-none w-full">{displayText}</span>
+	<span class="pointer-events-none w-full {isEmpty ? 'italic opacity-40' : ''}">{displayText}</span>
 
 	{#if selected}
 		<!-- Resize Handle -->

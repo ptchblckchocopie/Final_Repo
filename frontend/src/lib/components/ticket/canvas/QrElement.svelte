@@ -4,7 +4,7 @@
 	import { pushState } from '$lib/stores/history.svelte';
 	import { draggable } from '$lib/actions/draggable';
 	import { resizable } from '$lib/actions/resizable';
-	import { onMount } from 'svelte';
+	import { rotatable } from '$lib/actions/rotatable';
 
 	interface Props {
 		element: QrElementType;
@@ -17,6 +17,7 @@
 	const { element, selected, zoom, previewData, onclick }: Props = $props();
 
 	let canvasEl: HTMLCanvasElement;
+	let nodeEl: HTMLElement;
 
 	const codeValue = $derived(
 		previewData && element.placeholder
@@ -34,13 +35,20 @@
 
 		if (element.codeSettings.codeType === 'qr') {
 			const QRious = (await import('qrious')).default;
+			const size = Math.min(element.size.width, element.size.height);
 			new QRious({
 				element: canvasEl,
 				value,
-				size: Math.min(element.size.width, element.size.height),
+				size,
 				background: element.codeSettings.background,
 				foreground: element.codeSettings.foreground
 			});
+
+			// Render logo overlay if set
+			if (element.codeSettings.customLogo) {
+				const { addLogoToQR } = await import('$lib/utils/qr-generator');
+				await addLogoToQR(canvasEl, size, element.codeSettings.customLogo);
+			}
 		} else {
 			try {
 				const JsBarcode = (await import('jsbarcode')).default;
@@ -84,16 +92,32 @@
 	function handleResizeEnd() {
 		pushState();
 	}
+
+	function handleRotate(id: string, degrees: number) {
+		updateElement(id, { rotation: degrees });
+	}
+
+	function handleRotateEnd() {
+		pushState();
+	}
+
+	function getCenter(): { x: number; y: number } {
+		if (!nodeEl) return { x: 0, y: 0 };
+		const rect = nodeEl.getBoundingClientRect();
+		return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+	}
 </script>
 
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <div
+	bind:this={nodeEl}
 	class="absolute cursor-move {selected ? 'ring-2 ring-indigo-500' : ''}"
 	style="
 		left: {element.position.x}px;
 		top: {element.position.y}px;
 		width: {element.size.width}px;
 		height: {element.size.height}px;
+		transform: rotate({element.rotation}deg);
 	"
 	{onclick}
 	onkeydown={() => {}}
@@ -111,6 +135,7 @@
 	></canvas>
 
 	{#if selected}
+		<!-- Resize Handle -->
 		<div
 			class="resize-handle absolute -right-1.5 -bottom-1.5 z-10 h-3 w-3 cursor-se-resize rounded-sm bg-indigo-600"
 			use:resizable={{
@@ -121,5 +146,17 @@
 				onResizeEnd: handleResizeEnd
 			}}
 		></div>
+
+		<!-- Rotate Handle -->
+		<div
+			class="rotate-handle absolute -top-6 left-1/2 z-10 h-4 w-4 -translate-x-1/2 cursor-grab rounded-full border-2 border-indigo-600 bg-white"
+			use:rotatable={{
+				getElementId: () => element.id,
+				getCenter,
+				onRotate: handleRotate,
+				onRotateEnd: handleRotateEnd
+			}}
+		></div>
+		<div class="pointer-events-none absolute -top-3 left-1/2 h-3 w-px -translate-x-1/2 bg-indigo-600"></div>
 	{/if}
 </div>
