@@ -30,8 +30,8 @@
 		</summary>
 		<div class="space-y-3 border-t border-gray-100 p-3">
 			<div>
-				<label class="mb-1 block text-xs font-medium text-gray-500">Label Column</label>
-				<select value={config.labelColumn} onchange={handleColumnChange} class="w-full rounded border border-gray-300 px-2 py-1.5 text-xs">
+				<label for="label-column" class="mb-1 block text-xs font-medium text-gray-500">Label Column</label>
+				<select id="label-column" value={config.labelColumn} onchange={handleColumnChange} class="w-full rounded border border-gray-300 px-2 py-1.5 text-xs">
 					<option value="">None</option>
 					{#each headers as header}
 						<option value={header}>{header}</option>
@@ -41,8 +41,8 @@
 
 			{#if uniqueValues.length > 0}
 				<div>
-					<label class="mb-1 block text-xs font-medium text-gray-500">Block Width (px)</label>
-					<input type="number" value={config.labelBlockWidth} onchange={handleWidthChange} min="5" max="80" class="w-full rounded border border-gray-300 px-2 py-1 text-xs" />
+					<label for="label-block-width" class="mb-1 block text-xs font-medium text-gray-500">Block Width (px)</label>
+					<input id="label-block-width" type="number" value={config.labelBlockWidth} onchange={handleWidthChange} min="5" max="80" class="w-full rounded border border-gray-300 px-2 py-1 text-xs" />
 				</div>
 
 				<div>
@@ -54,8 +54,8 @@
 
 				{#if config.rightBlockEnabled}
 					<div>
-						<label class="mb-1 block text-xs font-medium text-gray-500">Right Block Width</label>
-						<input type="number" value={config.rightBlockWidth} onchange={(e) => setRightBlockWidth(parseInt((e.target as HTMLInputElement).value) || 20)} min="5" max="80" class="w-full rounded border border-gray-300 px-2 py-1 text-xs" />
+						<label for="right-block-width" class="mb-1 block text-xs font-medium text-gray-500">Right Block Width</label>
+						<input id="right-block-width" type="number" value={config.rightBlockWidth} onchange={(e) => setRightBlockWidth(parseInt((e.target as HTMLInputElement).value) || 20)} min="5" max="80" class="w-full rounded border border-gray-300 px-2 py-1 text-xs" />
 					</div>
 				{/if}
 
@@ -67,6 +67,7 @@
 								value={config.labelColors[value] || '#cccccc'}
 								onchange={(e) => handleColorChange(value, e)}
 								class="h-6 w-6 cursor-pointer rounded border-0"
+								aria-label="Color for {value}"
 							/>
 							<span class="truncate text-xs text-gray-600">{value}</span>
 						</div>

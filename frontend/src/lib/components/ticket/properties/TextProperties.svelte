@@ -22,8 +22,9 @@
 <div class="space-y-3">
 	<!-- Text Format -->
 	<div>
-		<label class="mb-1 block text-xs font-medium text-gray-500">Text Format</label>
+		<label for="text-format" class="mb-1 block text-xs font-medium text-gray-500">Text Format</label>
 		<input
+			id="text-format"
 			type="text"
 			value={element.textFormat}
 			onchange={(e) => update({ textFormat: (e.target as HTMLInputElement).value })}
@@ -35,8 +36,8 @@
 	<!-- Font Family & Size -->
 	<div class="flex gap-2">
 		<div class="flex-1">
-			<label class="mb-1 block text-xs font-medium text-gray-500">Font</label>
-			<select value={element.styles.fontFamily} onchange={(e) => updateStyle({ fontFamily: (e.target as HTMLSelectElement).value })} class="w-full rounded border border-gray-300 px-2 py-1 text-xs">
+			<label for="text-font" class="mb-1 block text-xs font-medium text-gray-500">Font</label>
+			<select id="text-font" value={element.styles.fontFamily} onchange={(e) => updateStyle({ fontFamily: (e.target as HTMLSelectElement).value })} class="w-full rounded border border-gray-300 px-2 py-1 text-xs">
 				<option value="Arial">Arial</option>
 				<option value="Helvetica">Helvetica</option>
 				<option value="Georgia">Georgia</option>
@@ -48,14 +49,14 @@
 			</select>
 		</div>
 		<div class="w-16">
-			<label class="mb-1 block text-xs font-medium text-gray-500">Size</label>
-			<input type="number" value={element.styles.fontSize} onchange={(e) => updateStyle({ fontSize: parseInt((e.target as HTMLInputElement).value) || 16 })} min="6" max="300" class="w-full rounded border border-gray-300 px-2 py-1 text-xs" />
+			<label for="text-size" class="mb-1 block text-xs font-medium text-gray-500">Size</label>
+			<input id="text-size" type="number" value={element.styles.fontSize} onchange={(e) => updateStyle({ fontSize: parseInt((e.target as HTMLInputElement).value) || 16 })} min="6" max="300" class="w-full rounded border border-gray-300 px-2 py-1 text-xs" />
 		</div>
 	</div>
 
 	<!-- Style Toggles (Bold, Italic, Underline) -->
 	<div>
-		<label class="mb-1 block text-xs font-medium text-gray-500">Style</label>
+		<span class="mb-1 block text-xs font-medium text-gray-500">Style</span>
 		<div class="flex gap-1">
 			<button
 				onclick={() => updateStyle({ fontBold: !element.styles.fontBold })}
@@ -75,13 +76,13 @@
 	<!-- Color & Background Color -->
 	<div class="flex gap-2">
 		<div class="flex-1">
-			<label class="mb-1 block text-xs font-medium text-gray-500">Text Color</label>
-			<input type="color" value={element.styles.color} onchange={(e) => updateStyle({ color: (e.target as HTMLInputElement).value })} class="h-8 w-full cursor-pointer rounded border-0" />
+			<label for="text-color" class="mb-1 block text-xs font-medium text-gray-500">Text Color</label>
+			<input id="text-color" type="color" value={element.styles.color} onchange={(e) => updateStyle({ color: (e.target as HTMLInputElement).value })} class="h-8 w-full cursor-pointer rounded border-0" />
 		</div>
 		<div class="flex-1">
-			<label class="mb-1 block text-xs font-medium text-gray-500">BG Color</label>
+			<label for="text-bg-color" class="mb-1 block text-xs font-medium text-gray-500">BG Color</label>
 			<div class="flex items-center gap-1">
-				<input type="color" value={element.styles.backgroundColor || '#ffffff'} onchange={(e) => updateStyle({ backgroundColor: (e.target as HTMLInputElement).value })} class="h-8 flex-1 cursor-pointer rounded border-0" />
+				<input id="text-bg-color" type="color" value={element.styles.backgroundColor || '#ffffff'} onchange={(e) => updateStyle({ backgroundColor: (e.target as HTMLInputElement).value })} class="h-8 flex-1 cursor-pointer rounded border-0" />
 				{#if element.styles.backgroundColor}
 					<button onclick={() => updateStyle({ backgroundColor: '' })} class="cursor-pointer rounded px-1.5 py-1 text-xs text-red-500 hover:bg-red-50" title="Clear background">&#10005;</button>
 				{/if}
@@ -91,14 +92,14 @@
 
 	<!-- Opacity -->
 	<div>
-		<label class="mb-1 block text-xs font-medium text-gray-500">Opacity ({Math.round((element.styles.opacity ?? 1) * 100)}%)</label>
-		<input type="range" min="0" max="1" step="0.05" value={element.styles.opacity ?? 1} oninput={(e) => updateStyle({ opacity: parseFloat((e.target as HTMLInputElement).value) })} class="w-full" />
+		<label for="text-opacity" class="mb-1 block text-xs font-medium text-gray-500">Opacity ({Math.round((element.styles.opacity ?? 1) * 100)}%)</label>
+		<input id="text-opacity" type="range" min="0" max="1" step="0.05" value={element.styles.opacity ?? 1} oninput={(e) => updateStyle({ opacity: parseFloat((e.target as HTMLInputElement).value) })} class="w-full" />
 	</div>
 
 	<!-- Alignment -->
 	<div class="flex gap-2">
 		<div class="flex-1">
-			<label class="mb-1 block text-xs font-medium text-gray-500">H-Align</label>
+			<span class="mb-1 block text-xs font-medium text-gray-500">H-Align</span>
 			<div class="flex rounded border border-gray-300">
 				{#each [['left', '⬅'], ['center', '⬆'], ['right', '➡']] as [val, icon]}
 					<button
@@ -109,7 +110,7 @@
 			</div>
 		</div>
 		<div class="flex-1">
-			<label class="mb-1 block text-xs font-medium text-gray-500">V-Align</label>
+			<span class="mb-1 block text-xs font-medium text-gray-500">V-Align</span>
 			<div class="flex rounded border border-gray-300">
 				{#each [['top', 'T'], ['center', 'M'], ['bottom', 'B']] as [val, icon]}
 					<button
@@ -123,31 +124,31 @@
 
 	<!-- Rotation -->
 	<div>
-		<label class="mb-1 block text-xs font-medium text-gray-500">Rotation ({element.rotation}°)</label>
-		<input type="range" min="0" max="359" value={element.rotation} oninput={(e) => update({ rotation: parseInt((e.target as HTMLInputElement).value) })} class="w-full" />
+		<label for="text-rotation" class="mb-1 block text-xs font-medium text-gray-500">Rotation ({element.rotation}°)</label>
+		<input id="text-rotation" type="range" min="0" max="359" value={element.rotation} oninput={(e) => update({ rotation: parseInt((e.target as HTMLInputElement).value) })} class="w-full" />
 	</div>
 
 	<!-- Size -->
 	<div class="flex gap-2">
 		<div class="flex-1">
-			<label class="mb-1 block text-xs font-medium text-gray-500">Width</label>
-			<input type="number" value={element.size.width} onchange={(e) => update({ size: { ...element.size, width: Math.max(20, parseInt((e.target as HTMLInputElement).value) || 150) } })} min="20" class="w-full rounded border border-gray-300 px-2 py-1 text-xs" />
+			<label for="text-width" class="mb-1 block text-xs font-medium text-gray-500">Width</label>
+			<input id="text-width" type="number" value={element.size.width} onchange={(e) => update({ size: { ...element.size, width: Math.max(20, parseInt((e.target as HTMLInputElement).value) || 150) } })} min="20" class="w-full rounded border border-gray-300 px-2 py-1 text-xs" />
 		</div>
 		<div class="flex-1">
-			<label class="mb-1 block text-xs font-medium text-gray-500">Height</label>
-			<input type="number" value={element.size.height} onchange={(e) => update({ size: { ...element.size, height: Math.max(10, parseInt((e.target as HTMLInputElement).value) || 30) } })} min="10" class="w-full rounded border border-gray-300 px-2 py-1 text-xs" />
+			<label for="text-height" class="mb-1 block text-xs font-medium text-gray-500">Height</label>
+			<input id="text-height" type="number" value={element.size.height} onchange={(e) => update({ size: { ...element.size, height: Math.max(10, parseInt((e.target as HTMLInputElement).value) || 30) } })} min="10" class="w-full rounded border border-gray-300 px-2 py-1 text-xs" />
 		</div>
 	</div>
 
 	<!-- Position -->
 	<div class="flex gap-2">
 		<div class="flex-1">
-			<label class="mb-1 block text-xs font-medium text-gray-500">X</label>
-			<input type="number" value={Math.round(element.position.x)} onchange={(e) => update({ position: { ...element.position, x: parseInt((e.target as HTMLInputElement).value) || 0 } })} class="w-full rounded border border-gray-300 px-2 py-1 text-xs" />
+			<label for="text-pos-x" class="mb-1 block text-xs font-medium text-gray-500">X</label>
+			<input id="text-pos-x" type="number" value={Math.round(element.position.x)} onchange={(e) => update({ position: { ...element.position, x: parseInt((e.target as HTMLInputElement).value) || 0 } })} class="w-full rounded border border-gray-300 px-2 py-1 text-xs" />
 		</div>
 		<div class="flex-1">
-			<label class="mb-1 block text-xs font-medium text-gray-500">Y</label>
-			<input type="number" value={Math.round(element.position.y)} onchange={(e) => update({ position: { ...element.position, y: parseInt((e.target as HTMLInputElement).value) || 0 } })} class="w-full rounded border border-gray-300 px-2 py-1 text-xs" />
+			<label for="text-pos-y" class="mb-1 block text-xs font-medium text-gray-500">Y</label>
+			<input id="text-pos-y" type="number" value={Math.round(element.position.y)} onchange={(e) => update({ position: { ...element.position, y: parseInt((e.target as HTMLInputElement).value) || 0 } })} class="w-full rounded border border-gray-300 px-2 py-1 text-xs" />
 		</div>
 	</div>
 

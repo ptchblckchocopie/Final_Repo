@@ -163,8 +163,8 @@
 	<!-- Controls Bar -->
 	<div class="flex flex-wrap items-center gap-3 border-b border-gray-200 bg-white px-4 py-3">
 		<div class="flex items-center gap-2">
-			<label class="text-xs font-medium text-gray-600">Gap (mm):</label>
-			<input type="number" bind:value={gap} min="0" max="20" step="0.5" class="w-16 rounded border border-gray-300 px-2 py-1 text-xs" />
+			<label for="preview-gap" class="text-xs font-medium text-gray-600">Gap (mm):</label>
+			<input id="preview-gap" type="number" bind:value={gap} min="0" max="20" step="0.5" class="w-16 rounded border border-gray-300 px-2 py-1 text-xs" />
 		</div>
 
 		<!-- View mode toggle -->

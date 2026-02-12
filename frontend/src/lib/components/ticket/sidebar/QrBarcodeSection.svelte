@@ -42,8 +42,8 @@
 		</summary>
 		<div class="space-y-2 border-t border-gray-100 p-3">
 			<div>
-				<label class="mb-1 block text-xs font-medium text-gray-500">Data Column</label>
-				<select bind:value={selectedColumn} class="w-full rounded border border-gray-300 px-2 py-1.5 text-xs">
+				<label for="qr-data-column" class="mb-1 block text-xs font-medium text-gray-500">Data Column</label>
+				<select id="qr-data-column" bind:value={selectedColumn} class="w-full rounded border border-gray-300 px-2 py-1.5 text-xs">
 					<option value="">Select column...</option>
 					{#each headers as header}
 						<option value={header}>{header}</option>
@@ -52,8 +52,8 @@
 			</div>
 
 			<div>
-				<label class="mb-1 block text-xs font-medium text-gray-500">Type</label>
-				<select bind:value={codeType} class="w-full rounded border border-gray-300 px-2 py-1.5 text-xs">
+				<label for="qr-code-type" class="mb-1 block text-xs font-medium text-gray-500">Type</label>
+				<select id="qr-code-type" bind:value={codeType} class="w-full rounded border border-gray-300 px-2 py-1.5 text-xs">
 					<option value="qr">QR Code</option>
 					<option value="barcode">Barcode</option>
 				</select>
@@ -61,8 +61,8 @@
 
 			{#if codeType === 'barcode'}
 				<div>
-					<label class="mb-1 block text-xs font-medium text-gray-500">Format</label>
-					<select bind:value={barcodeFormat} class="w-full rounded border border-gray-300 px-2 py-1.5 text-xs">
+					<label for="barcode-format" class="mb-1 block text-xs font-medium text-gray-500">Format</label>
+					<select id="barcode-format" bind:value={barcodeFormat} class="w-full rounded border border-gray-300 px-2 py-1.5 text-xs">
 						<option value="CODE128">CODE128</option>
 						<option value="CODE39">CODE39</option>
 						<option value="EAN13">EAN-13</option>

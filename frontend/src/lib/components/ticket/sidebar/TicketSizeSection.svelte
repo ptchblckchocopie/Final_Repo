@@ -27,7 +27,7 @@
 		</svg>
 	</summary>
 	<div class="space-y-2 border-t border-gray-100 p-3">
-		<select value={settings.type} onchange={handleTypeChange} class="w-full rounded border border-gray-300 px-2 py-1.5 text-xs">
+		<select value={settings.type} onchange={handleTypeChange} class="w-full rounded border border-gray-300 px-2 py-1.5 text-xs" aria-label="Ticket type">
 			<option value="ticket">Ticket (226.3 x 80 mm)</option>
 			<option value="convention-id">Convention ID (101.6 x 152.4 mm)</option>
 			<option value="certificate">Certificate (A4 Landscape)</option>
@@ -37,12 +37,12 @@
 		{#if settings.type === 'others'}
 			<div class="flex gap-2">
 				<div class="flex-1">
-					<label class="mb-1 block text-xs text-gray-500">Width (mm)</label>
-					<input type="number" value={settings.width} onchange={handleWidth} step="0.1" min="10" class="w-full rounded border border-gray-300 px-2 py-1 text-xs" />
+					<label for="ticket-width" class="mb-1 block text-xs text-gray-500">Width (mm)</label>
+					<input id="ticket-width" type="number" value={settings.width} onchange={handleWidth} step="0.1" min="10" class="w-full rounded border border-gray-300 px-2 py-1 text-xs" />
 				</div>
 				<div class="flex-1">
-					<label class="mb-1 block text-xs text-gray-500">Height (mm)</label>
-					<input type="number" value={settings.height} onchange={handleHeight} step="0.1" min="10" class="w-full rounded border border-gray-300 px-2 py-1 text-xs" />
+					<label for="ticket-height" class="mb-1 block text-xs text-gray-500">Height (mm)</label>
+					<input id="ticket-height" type="number" value={settings.height} onchange={handleHeight} step="0.1" min="10" class="w-full rounded border border-gray-300 px-2 py-1 text-xs" />
 				</div>
 			</div>
 		{/if}

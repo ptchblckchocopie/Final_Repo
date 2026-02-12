@@ -103,8 +103,8 @@
 	<!-- Controls -->
 	<div class="flex flex-wrap items-center gap-4 border-b border-gray-200 bg-white px-4 py-3">
 		<div class="flex items-center gap-2">
-			<label class="text-xs font-medium text-gray-600">Quality:</label>
-			<select bind:value={quality} class="rounded border border-gray-300 px-2 py-1.5 text-xs">
+			<label for="export-quality" class="text-xs font-medium text-gray-600">Quality:</label>
+			<select id="export-quality" bind:value={quality} class="rounded border border-gray-300 px-2 py-1.5 text-xs">
 				{#each qualityOptions as opt}
 					<option value={opt.value}>{opt.label}</option>
 				{/each}

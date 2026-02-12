@@ -62,17 +62,17 @@
 	<div class="space-y-3 border-t border-gray-100 p-3">
 		<!-- CSV Upload -->
 		<div>
-			<label class="mb-1 block text-xs font-medium text-gray-500">CSV Data</label>
-			<input type="file" accept=".csv" onchange={handleCSVFile} class="w-full text-xs file:mr-2 file:rounded file:border-0 file:bg-indigo-50 file:px-3 file:py-1.5 file:text-xs file:font-medium file:text-indigo-700 file:cursor-pointer hover:file:bg-indigo-100" />
+			<label for="csv-upload" class="mb-1 block text-xs font-medium text-gray-500">CSV Data</label>
+			<input id="csv-upload" type="file" accept=".csv" onchange={handleCSVFile} class="w-full text-xs file:mr-2 file:rounded file:border-0 file:bg-indigo-50 file:px-3 file:py-1.5 file:text-xs file:font-medium file:text-indigo-700 file:cursor-pointer hover:file:bg-indigo-100" />
 		</div>
 
 		<!-- Background Upload -->
 		<div>
-			<label class="mb-1 block text-xs font-medium text-gray-500">Background Image</label>
-			<input type="file" accept="image/*" onchange={handleBackgroundFile} class="w-full text-xs file:mr-2 file:rounded file:border-0 file:bg-indigo-50 file:px-3 file:py-1.5 file:text-xs file:font-medium file:text-indigo-700 file:cursor-pointer hover:file:bg-indigo-100" />
+			<label for="bg-upload" class="mb-1 block text-xs font-medium text-gray-500">Background Image</label>
+			<input id="bg-upload" type="file" accept="image/*" onchange={handleBackgroundFile} class="w-full text-xs file:mr-2 file:rounded file:border-0 file:bg-indigo-50 file:px-3 file:py-1.5 file:text-xs file:font-medium file:text-indigo-700 file:cursor-pointer hover:file:bg-indigo-100" />
 			{#if hasBackground}
 				<div class="mt-2 flex items-center gap-2">
-					<select value={fitMode} onchange={handleFitMode} class="flex-1 rounded border border-gray-300 px-2 py-1 text-xs">
+					<select id="bg-fit-mode" value={fitMode} onchange={handleFitMode} class="flex-1 rounded border border-gray-300 px-2 py-1 text-xs">
 						<option value="cover">Cover</option>
 						<option value="contain">Contain</option>
 						<option value="stretch">Stretch</option>
