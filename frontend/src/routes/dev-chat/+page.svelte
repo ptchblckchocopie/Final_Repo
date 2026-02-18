@@ -1,7 +1,14 @@
 <script lang="ts">
 	import { onMount, tick } from 'svelte';
-	import { getMessages, sendMessage } from '$lib/api/messages';
+	import { getMessages } from '$lib/api/messages';
 	import { showToast } from '$lib/stores/toast.svelte';
+	import {
+		connectChat,
+		disconnectChat,
+		sendChatMessage,
+		getConnectionStatus,
+		getOnlineUsers,
+	} from '$lib/stores/chat-ws.svelte';
 	import {
 		getCallState,
 		getRemoteUser,
@@ -18,6 +25,7 @@
 	} from '$lib/stores/call.svelte';
 	import { getIsDark } from '$lib/stores/theme.svelte';
 	import ThemeToggle from '$lib/components/ui/ThemeToggle.svelte';
+	import DrawBoard from '$lib/components/chat/DrawBoard.svelte';
 	import type { PayloadMessage } from '$lib/types/payload';
 
 	let username = $state('');
@@ -25,9 +33,11 @@
 	let messages = $state<PayloadMessage[]>([]);
 	let newMessage = $state('');
 	let loading = $state(true);
-	let sending = $state(false);
-	let pollInterval = $state<ReturnType<typeof setInterval> | null>(null);
 	let messageContainer = $state<HTMLDivElement>(undefined!);
+	let showDrawBoard = $state(true);
+
+	let wsStatus = $derived(getConnectionStatus());
+	let wsOnlineUsers = $derived(getOnlineUsers());
 
 	let showCallDialog = $state(false);
 	let callTargetInput = $state('');
@@ -46,7 +56,7 @@
 			startChat();
 		}
 		return () => {
-			if (pollInterval) clearInterval(pollInterval);
+			disconnectChat();
 			destroyCallSystem();
 		};
 	});
@@ -67,8 +77,7 @@
 	}
 
 	function changeUsername() {
-		if (pollInterval) clearInterval(pollInterval);
-		pollInterval = null;
+		disconnectChat();
 		destroyCallSystem();
 		localStorage.removeItem('dev-chat-username');
 		username = '';
@@ -90,13 +99,12 @@
 
 	function startChat() {
 		fetchMessages().then(() => scrollToBottom());
-		pollInterval = setInterval(async () => {
-			const prevCount = messages.length;
-			await fetchMessages();
-			if (messages.length > prevCount) {
+		connectChat(username, (newMsg) => {
+			if (!messages.some((m) => m.id === newMsg.id)) {
+				messages = [...messages, newMsg];
 				scrollToBottom();
 			}
-		}, 3000);
+		});
 		initCallSystem(username);
 	}
 
@@ -120,22 +128,18 @@
 		}
 	}
 
-	async function handleSend(e: SubmitEvent) {
+	function handleSend(e: SubmitEvent) {
 		e.preventDefault();
 		const trimmed = newMessage.trim();
-		if (!trimmed || sending) return;
+		if (!trimmed) return;
 
-		sending = true;
-		try {
-			await sendMessage(username, trimmed);
-			newMessage = '';
-			await fetchMessages();
-			scrollToBottom();
-		} catch {
-			showToast('error', 'Failed to send', 'Could not send your message. Please try again.');
-		} finally {
-			sending = false;
+		if (wsStatus !== 'connected') {
+			showToast('error', 'Not connected', 'WebSocket is not connected. Trying to reconnect...');
+			return;
 		}
+
+		sendChatMessage(trimmed);
+		newMessage = '';
 	}
 
 	function formatTime(dateStr: string): string {
@@ -253,170 +257,180 @@
 	</section>
 {:else}
 	<!-- CHAT INTERFACE -->
-	<section class="flex h-[calc(100vh-4rem)] flex-col bg-gray-50 dark:bg-gray-900">
-		<!-- Chat header -->
-		<div class="border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-6 py-4 shadow-sm">
-			<div class="mx-auto flex max-w-4xl items-center justify-between">
-				<div class="flex items-center gap-3">
-					<div
-						class="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 shadow-md"
-					>
-						<svg
-							class="h-5 w-5 text-white"
-							fill="none"
-							viewBox="0 0 24 24"
-							stroke="currentColor"
-							stroke-width="1.5"
+	<section class="flex h-[calc(100vh-4rem)] bg-gray-50 dark:bg-gray-900">
+		<!-- Chat column -->
+		<div class="flex flex-1 flex-col min-w-0">
+			<!-- Chat header -->
+			<div class="border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-6 py-4 shadow-sm">
+				<div class="mx-auto flex items-center justify-between">
+					<div class="flex items-center gap-3">
+						<div
+							class="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 shadow-md"
 						>
-							<path
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-							/>
-						</svg>
+							<svg
+								class="h-5 w-5 text-white"
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke="currentColor"
+								stroke-width="1.5"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+								/>
+							</svg>
+						</div>
+						<div>
+							<div class="flex items-center gap-2">
+								<h1 class="text-lg font-bold text-gray-900 dark:text-gray-100">Dev Chat</h1>
+								<span
+									class="inline-block h-2.5 w-2.5 rounded-full {wsStatus === 'connected'
+										? 'bg-green-500'
+										: wsStatus === 'connecting'
+											? 'bg-yellow-400 animate-pulse'
+											: 'bg-red-500'}"
+									title={wsStatus}
+								></span>
+							</div>
+							<p class="text-xs text-gray-500 dark:text-gray-400">
+								Logged in as <span class="font-semibold text-indigo-600 dark:text-indigo-400">{username}</span>
+								{#if wsOnlineUsers.length > 0}
+									<span class="ml-1">&middot; {wsOnlineUsers.length} online</span>
+								{/if}
+							</p>
+						</div>
 					</div>
-					<div>
-						<h1 class="text-lg font-bold text-gray-900 dark:text-gray-100">Dev Chat</h1>
-						<p class="text-xs text-gray-500 dark:text-gray-400">
-							Logged in as <span class="font-semibold text-indigo-600 dark:text-indigo-400">{username}</span>
-						</p>
+					<div class="flex items-center gap-2">
+						{#if currentCallState === 'idle'}
+							<ThemeToggle />
+							<!-- Draw board toggle -->
+							<button
+								onclick={() => (showDrawBoard = !showDrawBoard)}
+								class="cursor-pointer rounded-lg px-3 py-1.5 text-sm font-medium transition-colors {showDrawBoard
+									? 'bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300'
+									: 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'}"
+								title="{showDrawBoard ? 'Hide' : 'Show'} drawing board"
+							>
+								<svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+									<path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+								</svg>
+							</button>
+							<button
+								onclick={openCallDialog}
+								class="cursor-pointer rounded-lg bg-green-500 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-green-600"
+							>
+								Call
+							</button>
+							<button
+								onclick={changeUsername}
+								class="cursor-pointer rounded-lg px-3 py-1.5 text-sm font-medium text-gray-500 dark:text-gray-400 transition-colors hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-700 dark:hover:text-gray-200"
+							>
+								Change Name
+							</button>
+						{:else if currentCallState === 'calling'}
+							<span class="text-sm text-gray-500 dark:text-gray-400">Calling {currentRemoteUser}...</span>
+							<button
+								onclick={hangUp}
+								class="cursor-pointer rounded-lg bg-red-500 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-red-600"
+							>
+								Cancel
+							</button>
+						{:else if currentCallState === 'active'}
+							<span class="text-sm font-medium text-green-600 dark:text-green-400">In call with {currentRemoteUser}</span>
+							<button
+								onclick={toggleMute}
+								class="cursor-pointer rounded-lg px-3 py-1.5 text-sm font-medium transition-colors {currentIsMuted ? 'bg-yellow-100 dark:bg-yellow-900/40 text-yellow-700 dark:text-yellow-300 hover:bg-yellow-200 dark:hover:bg-yellow-900/60' : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600'}"
+							>
+								{currentIsMuted ? 'Unmute' : 'Mute'}
+							</button>
+							<button
+								onclick={hangUp}
+								class="cursor-pointer rounded-lg bg-red-500 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-red-600"
+							>
+								Hang Up
+							</button>
+						{/if}
 					</div>
 				</div>
-				<div class="flex items-center gap-2">
-					{#if currentCallState === 'idle'}
-						<ThemeToggle />
-						<button
-							onclick={openCallDialog}
-							class="cursor-pointer rounded-lg bg-green-500 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-green-600"
+			</div>
+
+			<!-- Messages area -->
+			<div bind:this={messageContainer} class="flex-1 overflow-y-auto px-4 py-6">
+				<div class="mx-auto max-w-4xl space-y-4">
+					{#if loading}
+						<div class="flex justify-center py-12">
+							<div
+								class="h-10 w-10 animate-spin rounded-full border-4 border-indigo-200 dark:border-indigo-800 border-t-indigo-600"
+							></div>
+						</div>
+					{:else if messages.length === 0}
+						<div
+							class="rounded-2xl border-2 border-dashed border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-16 text-center"
 						>
-							Call
-						</button>
-						<button
-							onclick={changeUsername}
-							class="cursor-pointer rounded-lg px-3 py-1.5 text-sm font-medium text-gray-500 dark:text-gray-400 transition-colors hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-700 dark:hover:text-gray-200"
-						>
-							Change Name
-						</button>
-					{:else if currentCallState === 'calling'}
-						<span class="text-sm text-gray-500 dark:text-gray-400">Calling {currentRemoteUser}...</span>
-						<button
-							onclick={hangUp}
-							class="cursor-pointer rounded-lg bg-red-500 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-red-600"
-						>
-							Cancel
-						</button>
-					{:else if currentCallState === 'active'}
-						<span class="text-sm font-medium text-green-600 dark:text-green-400">In call with {currentRemoteUser}</span>
-						<button
-							onclick={toggleMute}
-							class="cursor-pointer rounded-lg px-3 py-1.5 text-sm font-medium transition-colors {currentIsMuted ? 'bg-yellow-100 dark:bg-yellow-900/40 text-yellow-700 dark:text-yellow-300 hover:bg-yellow-200 dark:hover:bg-yellow-900/60' : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600'}"
-						>
-							{currentIsMuted ? 'Unmute' : 'Mute'}
-						</button>
-						<button
-							onclick={hangUp}
-							class="cursor-pointer rounded-lg bg-red-500 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-red-600"
-						>
-							Hang Up
-						</button>
+							<svg
+								class="mx-auto h-12 w-12 text-gray-300 dark:text-gray-600"
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke="currentColor"
+								stroke-width="1"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+								/>
+							</svg>
+							<p class="mt-4 text-gray-500 dark:text-gray-400">No messages yet. Be the first to say something!</p>
+						</div>
+					{:else}
+						{#each messages as message (message.id)}
+							{@const isOwn = message.sender === username}
+							<div class="flex {isOwn ? 'justify-end' : 'justify-start'}">
+								<div class="max-w-[75%]">
+									{#if !isOwn}
+										<p class="mb-1 ml-3 text-xs font-semibold text-gray-500 dark:text-gray-400">
+											{message.sender}
+										</p>
+									{/if}
+									<div
+										class="rounded-2xl px-4 py-3 shadow-sm {isOwn
+											? 'bg-gradient-to-r from-indigo-600 to-indigo-500 text-white'
+											: 'border border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100'}"
+									>
+										<p class="whitespace-pre-wrap text-sm leading-relaxed">
+											{message.content}
+										</p>
+									</div>
+									<p
+										class="mt-1 text-xs text-gray-400 dark:text-gray-500 {isOwn
+											? 'mr-3 text-right'
+											: 'ml-3'}"
+									>
+										{formatTime(message.createdAt)}
+									</p>
+								</div>
+							</div>
+						{/each}
 					{/if}
 				</div>
 			</div>
-		</div>
 
-		<!-- Messages area -->
-		<div bind:this={messageContainer} class="flex-1 overflow-y-auto px-4 py-6">
-			<div class="mx-auto max-w-4xl space-y-4">
-				{#if loading}
-					<div class="flex justify-center py-12">
-						<div
-							class="h-10 w-10 animate-spin rounded-full border-4 border-indigo-200 dark:border-indigo-800 border-t-indigo-600"
-						></div>
-					</div>
-				{:else if messages.length === 0}
-					<div
-						class="rounded-2xl border-2 border-dashed border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-16 text-center"
+			<!-- Message input -->
+			<div class="border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-4 py-4">
+				<form onsubmit={handleSend} class="mx-auto flex max-w-4xl gap-3">
+					<input
+						type="text"
+						bind:value={newMessage}
+						placeholder="Type a message..."
+						maxlength={1000}
+						class="flex-1 rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-4 py-3 text-gray-900 dark:text-gray-100 transition-all focus:border-indigo-500 focus:bg-white dark:focus:bg-gray-600 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none"
+					/>
+					<button
+						type="submit"
+						disabled={wsStatus !== 'connected' || !newMessage.trim()}
+						class="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-indigo-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-600/25 transition-all hover:shadow-xl hover:shadow-indigo-600/30 hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50"
 					>
-						<svg
-							class="mx-auto h-12 w-12 text-gray-300 dark:text-gray-600"
-							fill="none"
-							viewBox="0 0 24 24"
-							stroke="currentColor"
-							stroke-width="1"
-						>
-							<path
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-							/>
-						</svg>
-						<p class="mt-4 text-gray-500 dark:text-gray-400">No messages yet. Be the first to say something!</p>
-					</div>
-				{:else}
-					{#each messages as message (message.id)}
-						{@const isOwn = message.sender === username}
-						<div class="flex {isOwn ? 'justify-end' : 'justify-start'}">
-							<div class="max-w-[75%]">
-								{#if !isOwn}
-									<p class="mb-1 ml-3 text-xs font-semibold text-gray-500 dark:text-gray-400">
-										{message.sender}
-									</p>
-								{/if}
-								<div
-									class="rounded-2xl px-4 py-3 shadow-sm {isOwn
-										? 'bg-gradient-to-r from-indigo-600 to-indigo-500 text-white'
-										: 'border border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100'}"
-								>
-									<p class="whitespace-pre-wrap text-sm leading-relaxed">
-										{message.content}
-									</p>
-								</div>
-								<p
-									class="mt-1 text-xs text-gray-400 dark:text-gray-500 {isOwn
-										? 'mr-3 text-right'
-										: 'ml-3'}"
-								>
-									{formatTime(message.createdAt)}
-								</p>
-							</div>
-						</div>
-					{/each}
-				{/if}
-			</div>
-		</div>
-
-		<!-- Message input -->
-		<div class="border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-4 py-4">
-			<form onsubmit={handleSend} class="mx-auto flex max-w-4xl gap-3">
-				<input
-					type="text"
-					bind:value={newMessage}
-					placeholder="Type a message..."
-					maxlength={1000}
-					class="flex-1 rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-4 py-3 text-gray-900 dark:text-gray-100 transition-all focus:border-indigo-500 focus:bg-white dark:focus:bg-gray-600 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none"
-				/>
-				<button
-					type="submit"
-					disabled={sending || !newMessage.trim()}
-					class="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-indigo-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-600/25 transition-all hover:shadow-xl hover:shadow-indigo-600/30 hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50"
-				>
-					{#if sending}
-						<svg class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
-							<circle
-								class="opacity-25"
-								cx="12"
-								cy="12"
-								r="10"
-								stroke="currentColor"
-								stroke-width="4"
-							></circle>
-							<path
-								class="opacity-75"
-								fill="currentColor"
-								d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-							></path>
-						</svg>
-					{:else}
 						<svg
 							class="h-4 w-4"
 							fill="none"
@@ -430,11 +444,32 @@
 								d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
 							/>
 						</svg>
-					{/if}
-					Send
-				</button>
-			</form>
+						Send
+					</button>
+				</form>
+			</div>
 		</div>
+
+		<!-- Drawing Board panel -->
+		{#if showDrawBoard}
+			<div class="hidden lg:flex w-80 shrink-0 flex-col border-l border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
+				<div class="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-4 py-3">
+					<h2 class="text-sm font-semibold text-gray-900 dark:text-gray-100">Drawing Board</h2>
+					<button
+						onclick={() => (showDrawBoard = false)}
+						aria-label="Close drawing board"
+						class="cursor-pointer rounded-lg p-1 text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-600 dark:hover:text-gray-300"
+					>
+						<svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+							<path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+						</svg>
+					</button>
+				</div>
+				<div class="flex-1 min-h-0">
+					<DrawBoard />
+				</div>
+			</div>
+		{/if}
 	</section>
 
 	<!-- Call Dialog Modal -->

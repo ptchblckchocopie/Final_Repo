@@ -4,7 +4,8 @@ export async function payloadFetch<T>(
 	endpoint: string,
 	options?: RequestInit
 ): Promise<T> {
-	const url = endpoint.startsWith('http') ? endpoint : `${BASE_URL}${endpoint}`;
+	// SEC-NEW-1: Always route through BASE_URL to prevent SSRF bypass
+	const url = `${BASE_URL}${endpoint}`;
 
 	const isFormData = options?.body instanceof FormData;
 
@@ -17,8 +18,10 @@ export async function payloadFetch<T>(
 	});
 
 	if (!res.ok) {
+		// SEC-H4: Log full error for debugging, but sanitize what's thrown to caller
 		const errorBody = await res.text().catch(() => '');
-		throw new Error(`API error: ${res.status} ${res.statusText} - ${errorBody}`);
+		console.error(`API error [${res.status}] ${endpoint}:`, errorBody);
+		throw new Error(`Request failed (${res.status})`);
 	}
 
 	return res.json();

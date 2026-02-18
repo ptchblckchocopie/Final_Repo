@@ -5,8 +5,9 @@ export const Media: CollectionConfig = {
   access: {
     create: () => true,
     read: () => true,
-    update: () => true,
-    delete: () => true,
+    // SEC-C2: Restrict update/delete to authenticated users
+    update: ({ req }) => !!req.user,
+    delete: ({ req }) => !!req.user,
   },
   admin: {
     useAsTitle: 'filename',
@@ -18,5 +19,9 @@ export const Media: CollectionConfig = {
       required: true,
     },
   ],
-  upload: true,
+  // SEC-C1: Restrict uploads to image MIME types only
+  upload: {
+    mimeTypes: ['image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/svg+xml'],
+    filesRequiredOnCreate: true,
+  },
 }

@@ -68,3 +68,8 @@ export function getClipboard(): TicketElement[] {
 export function hasClipboard() {
 	return clipboard.length > 0;
 }
+
+// BUG-M3: Allow external clearing of clipboard (e.g., on template load)
+export function clearClipboard() {
+	clipboard = [];
+}

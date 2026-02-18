@@ -21,7 +21,6 @@ export function markDirty() {
 export function markClean(source?: { templateName?: string }) {
 	isDirty = false;
 	lastSavedTime = new Date().toISOString();
-	if (source?.templateName !== undefined) {
-		lastSavedTemplateName = source.templateName;
-	}
+	// BUG-M12: Always update templateName — clear it when source is not provided
+	lastSavedTemplateName = source?.templateName ?? null;
 }

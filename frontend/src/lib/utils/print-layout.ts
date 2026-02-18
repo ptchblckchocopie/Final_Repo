@@ -14,6 +14,19 @@ export function calculateLayout(
 	ticketType: TicketType,
 	totalTickets: number
 ): LayoutResult {
+	// BUG-M9: Guard against zero/negative dimensions that cause NaN/Infinity
+	if (ticketWidth <= 0 || ticketHeight <= 0) {
+		return {
+			ticketsPerRow: 0,
+			ticketsPerCol: 0,
+			ticketsPerPage: 0,
+			totalPages: 0,
+			orientation: 'portrait',
+			availableWidth: A4_WIDTH - MARGIN * 2,
+			availableHeight: A4_HEIGHT - MARGIN * 2
+		};
+	}
+
 	let ticketsPerRow: number;
 	let ticketsPerCol: number;
 	let orientation: 'landscape' | 'portrait';

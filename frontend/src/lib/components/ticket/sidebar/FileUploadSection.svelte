@@ -35,6 +35,17 @@
 		const file = input.files?.[0];
 		if (!file) return;
 
+		// SEC-H7: Validate file size and type before reading
+		if (file.size > 10 * 1024 * 1024) {
+			showToast('error', 'File too large', 'Image must be under 10MB');
+			return;
+		}
+
+		if (!file.type.startsWith('image/')) {
+			showToast('error', 'Invalid file type', 'Please select an image file');
+			return;
+		}
+
 		const reader = new FileReader();
 		reader.onload = (ev) => {
 			setBackgroundImage(ev.target?.result as string);

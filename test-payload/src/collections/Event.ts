@@ -8,13 +8,15 @@ export const Events: CollectionConfig = {
   access: {
     create: () => true,
     read: () => true,
-    update: () => true,
+    update: ({ req }) => !!req.user,
+    delete: ({ req }) => !!req.user,
   },
   fields: [
     {
       name: 'title',
       type: 'text',
       required: true,
+      maxLength: 200,
     },
     {
       name: 'slug',
@@ -27,6 +29,7 @@ export const Events: CollectionConfig = {
       name: 'content',
       type: 'textarea', // Use 'richText' if you want a full editor
       required: true,
+      maxLength: 5000,
     },
      {
       name: 'event_date',

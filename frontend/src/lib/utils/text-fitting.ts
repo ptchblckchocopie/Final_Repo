@@ -41,6 +41,9 @@ export function autoFitFontSize(
 	noWrap: boolean,
 	isItalic: boolean = false
 ): number {
+	// BUG-M8: Return 0 for invalid dimensions — prevents oversized font for zero-height boxes
+	if (maxWidth <= 0 || maxHeight <= 0) return 0;
+
 	const canvas = document.createElement('canvas');
 	const ctx = canvas.getContext('2d')!;
 

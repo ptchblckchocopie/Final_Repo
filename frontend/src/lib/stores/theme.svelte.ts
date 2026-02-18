@@ -1,10 +1,15 @@
 let darkMode = $state(false);
 
+// BUG-M1: Wrap localStorage access in try-catch — throws in private browsing / sandboxed iframes
 if (typeof window !== 'undefined') {
-	const saved = localStorage.getItem('theme-dark');
-	if (saved !== null) {
-		darkMode = saved === 'true';
-	} else {
+	try {
+		const saved = localStorage.getItem('theme-dark');
+		if (saved !== null) {
+			darkMode = saved === 'true';
+		} else {
+			darkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+		}
+	} catch {
 		darkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
 	}
 }
@@ -12,7 +17,11 @@ if (typeof window !== 'undefined') {
 $effect.root(() => {
 	$effect(() => {
 		if (typeof window !== 'undefined') {
-			localStorage.setItem('theme-dark', String(darkMode));
+			try {
+				localStorage.setItem('theme-dark', String(darkMode));
+			} catch {
+				// BUG-M1: localStorage unavailable — skip persistence
+			}
 		}
 	});
 });

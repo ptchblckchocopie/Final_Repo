@@ -3,10 +3,12 @@ import type { CollectionConfig } from 'payload'
 export const TicketTemplates: CollectionConfig = {
   slug: 'ticket-templates',
   access: {
+    // NOTE: Auth for all operations should be added when user auth is implemented (see CLAUDE.md)
     create: () => true,
     read: () => true,
     update: () => true,
-    delete: () => true,
+    // SEC-C2: Restrict delete to authenticated users
+    delete: ({ req }) => !!req.user,
   },
   admin: {
     useAsTitle: 'name',
@@ -16,6 +18,8 @@ export const TicketTemplates: CollectionConfig = {
       name: 'name',
       type: 'text',
       required: true,
+      // SEC-M8: Limit template name length
+      maxLength: 200,
     },
     {
       name: 'backgroundImage',
@@ -68,6 +72,12 @@ export const TicketTemplates: CollectionConfig = {
       name: 'elements',
       type: 'json',
       required: true,
+      // SEC-M8: Validate elements is an array with bounded size
+      validate: (value: unknown) => {
+        if (!Array.isArray(value)) return 'Elements must be an array'
+        if (value.length > 500) return 'Too many elements (max 500)'
+        return true
+      },
     },
     {
       name: 'labelConfig',
@@ -82,6 +92,12 @@ export const TicketTemplates: CollectionConfig = {
           name: 'labelColors',
           type: 'json',
           defaultValue: {},
+          // SEC-M8: Validate labelColors is an object or null
+          validate: (value: unknown) => {
+            if (value === null || value === undefined) return true
+            if (typeof value !== 'object' || Array.isArray(value)) return 'Label colors must be an object'
+            return true
+          },
         },
         {
           name: 'labelBlockWidth',
@@ -103,10 +119,22 @@ export const TicketTemplates: CollectionConfig = {
     {
       name: 'csvData',
       type: 'json',
+      // SEC-M8: Validate csvData is an array or null
+      validate: (value: unknown) => {
+        if (value === null || value === undefined) return true
+        if (!Array.isArray(value)) return 'CSV data must be an array'
+        return true
+      },
     },
     {
       name: 'csvHeaders',
       type: 'json',
+      // SEC-M8: Validate csvHeaders is an array or null
+      validate: (value: unknown) => {
+        if (value === null || value === undefined) return true
+        if (!Array.isArray(value)) return 'CSV headers must be an array'
+        return true
+      },
     },
     {
       name: 'printSettings',

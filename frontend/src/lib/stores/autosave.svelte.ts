@@ -6,6 +6,7 @@ import { getLabelConfig, setAllLabelConfig } from './labels.svelte';
 import { getBackgroundImage, getBackgroundFitMode, setBackgroundImage, setBackgroundFitMode } from './canvas.svelte';
 import { getTicketGap, setTicketGap } from './print-settings.svelte';
 import { markClean } from './dirty.svelte';
+import { clearHistory } from './history.svelte';
 
 const DB_NAME = 'veenttix-autosave';
 const DB_VERSION = 1;
@@ -105,17 +106,32 @@ export async function checkForPendingSession(): Promise<boolean> {
 
 export async function restoreSession(): Promise<void> {
 	try {
-		const [elements, csvData, csvHeaders, ticketSettings, labelConfig, backgroundFitMode, backgroundImageBlob, ticketGap] =
-			await Promise.all([
-				dbGet<TicketElement[]>('elements'),
-				dbGet<Record<string, string>[]>('csvData'),
-				dbGet<string[]>('csvHeaders'),
-				dbGet<TicketSettings>('ticketSettings'),
-				dbGet<LabelConfig>('labelConfig'),
-				dbGet<BackgroundFitMode>('backgroundFitMode'),
-				dbGet<Blob>('backgroundImage'),
-				dbGet<number>('ticketGap')
-			]);
+		// BUG-M4: Clear stale history before restoring to prevent undo to wrong state
+		clearHistory();
+
+		// BUG-C2: Use Promise.allSettled so a single corrupt key doesn't block all recovery
+		const results = await Promise.allSettled([
+			dbGet<TicketElement[]>('elements'),
+			dbGet<Record<string, string>[]>('csvData'),
+			dbGet<string[]>('csvHeaders'),
+			dbGet<TicketSettings>('ticketSettings'),
+			dbGet<LabelConfig>('labelConfig'),
+			dbGet<BackgroundFitMode>('backgroundFitMode'),
+			dbGet<Blob>('backgroundImage'),
+			dbGet<number>('ticketGap')
+		]);
+
+		const settled = <T>(r: PromiseSettledResult<T | undefined>): T | undefined =>
+			r.status === 'fulfilled' ? r.value : undefined;
+
+		const elements = settled(results[0]);
+		const csvData = settled(results[1]);
+		const csvHeaders = settled(results[2]);
+		const ticketSettings = settled(results[3]);
+		const labelConfig = settled(results[4]);
+		const backgroundFitMode = settled(results[5]);
+		const backgroundImageBlob = settled(results[6]);
+		const ticketGap = settled(results[7]);
 
 		if (elements) setElements(elements);
 		if (csvData && csvHeaders) setCsvDirect(csvData, csvHeaders);
@@ -153,10 +169,19 @@ export async function clearAutosave(): Promise<void> {
 	pendingSessionTime = null;
 }
 
+// BUG-C1: Track cleanup function to prevent effect accumulation
+let autoSaveCleanup: (() => void) | null = null;
+
 export function initAutoSave(): void {
+	// BUG-C1: Clean up previous effect before creating a new one
+	if (autoSaveCleanup) {
+		autoSaveCleanup();
+		autoSaveCleanup = null;
+	}
+
 	let debounceTimer: ReturnType<typeof setTimeout> | null = null;
 
-	$effect.root(() => {
+	autoSaveCleanup = $effect.root(() => {
 	$effect(() => {
 		// Read all store values to establish reactive dependencies
 		const elements = getElements();

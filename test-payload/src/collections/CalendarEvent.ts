@@ -8,18 +8,21 @@ export const CalendarEvents: CollectionConfig = {
   access: {
     create: () => true,
     read: () => true,
-    update: () => true,
-    delete: () => true,
+    // SEC-C2: Restrict update/delete to authenticated users
+    update: ({ req }) => !!req.user,
+    delete: ({ req }) => !!req.user,
   },
   fields: [
     {
       name: 'title',
       type: 'text',
       required: true,
+      maxLength: 200,
     },
     {
       name: 'description',
       type: 'textarea',
+      maxLength: 2000,
     },
     {
       name: 'start_date',

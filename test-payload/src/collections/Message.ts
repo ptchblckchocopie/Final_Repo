@@ -8,6 +8,9 @@ export const Messages: CollectionConfig = {
   access: {
     create: () => true,
     read: () => true,
+    // SEC-C2: Restrict update/delete to authenticated users
+    update: ({ req }) => !!req.user,
+    delete: ({ req }) => !!req.user,
   },
   fields: [
     {

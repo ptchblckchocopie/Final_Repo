@@ -15,12 +15,14 @@ let incomingSignal = $state<PayloadCallSignal | null>(null);
 
 let localUsername = '';
 let callId = '';
+let offerSignalId: number | null = null;
 let peerConnection: RTCPeerConnection | null = null;
 let localStream: MediaStream | null = null;
 let remoteAudioEl: HTMLAudioElement | null = null;
 let incomingPollTimer: ReturnType<typeof setInterval> | null = null;
 let signalingPollTimer: ReturnType<typeof setInterval> | null = null;
 let lastSignalTimestamp = '';
+let pendingIceCandidates: RTCIceCandidate[] = [];
 
 const RTC_CONFIG: RTCConfiguration = {
 	iceServers: [{ urls: 'stun:stun.l.google.com:19302' }],
@@ -63,6 +65,8 @@ async function pollForIncomingCalls() {
 	if (callState !== 'idle') return;
 	try {
 		const res = await getIncomingCalls(localUsername);
+		// BUG-C3: Re-check state after async gap — user may have started a call during the request
+		if (callState !== 'idle') return;
 		if (res.docs.length > 0) {
 			const offer = res.docs[0];
 			incomingSignal = offer;
@@ -95,7 +99,7 @@ export async function startCall(targetUser: string) {
 		const offer = await peerConnection.createOffer();
 		await peerConnection.setLocalDescription(offer);
 
-		await createCallSignal({
+		const offerSignal = await createCallSignal({
 			callId,
 			from: localUsername,
 			to: targetUser,
@@ -103,6 +107,7 @@ export async function startCall(targetUser: string) {
 			data: { sdp: offer.sdp, type: offer.type },
 			status: 'pending',
 		});
+		offerSignalId = offerSignal.id;
 
 		lastSignalTimestamp = new Date().toISOString();
 		startSignalingPoll();
@@ -130,6 +135,12 @@ export async function acceptCall() {
 		await peerConnection.setRemoteDescription(
 			new RTCSessionDescription({ sdp: offerData.sdp, type: offerData.type })
 		);
+
+		// Flush any ICE candidates that were queued before remote description was set
+		for (const candidate of pendingIceCandidates) {
+			await peerConnection.addIceCandidate(candidate);
+		}
+		pendingIceCandidates = [];
 
 		const answer = await peerConnection.createAnswer();
 		await peerConnection.setLocalDescription(answer);
@@ -173,6 +184,9 @@ export async function declineCall() {
 
 export async function hangUp() {
 	try {
+		if (offerSignalId) {
+			await updateCallSignalStatus(offerSignalId, 'ended');
+		}
 		await createCallSignal({
 			callId,
 			from: localUsername,
@@ -254,19 +268,29 @@ async function pollForSignals() {
 					new RTCSessionDescription({ sdp: answerData.sdp, type: answerData.type })
 				);
 				callState = 'active';
+
+				// Flush any ICE candidates that arrived before the answer
+				for (const candidate of pendingIceCandidates) {
+					await peerConnection.addIceCandidate(candidate);
+				}
+				pendingIceCandidates = [];
 			} else if (signal.type === 'ice-candidate' && peerConnection) {
 				const candidateData = signal.data as {
 					candidate: string;
 					sdpMid: string | null;
 					sdpMLineIndex: number | null;
 				};
-				await peerConnection.addIceCandidate(
-					new RTCIceCandidate({
-						candidate: candidateData.candidate,
-						sdpMid: candidateData.sdpMid,
-						sdpMLineIndex: candidateData.sdpMLineIndex,
-					})
-				);
+				const candidate = new RTCIceCandidate({
+					candidate: candidateData.candidate,
+					sdpMid: candidateData.sdpMid,
+					sdpMLineIndex: candidateData.sdpMLineIndex,
+				});
+
+				if (peerConnection.remoteDescription) {
+					await peerConnection.addIceCandidate(candidate);
+				} else {
+					pendingIceCandidates.push(candidate);
+				}
 			} else if (signal.type === 'hangup') {
 				cleanup();
 				return;
@@ -305,6 +329,8 @@ function cleanup() {
 	remoteUser = '';
 	isMuted = false;
 	callId = '';
+	offerSignalId = null;
 	incomingSignal = null;
 	lastSignalTimestamp = '';
+	pendingIceCandidates = [];
 }

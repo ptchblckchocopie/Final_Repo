@@ -6,7 +6,11 @@ export const Posts: CollectionConfig = {
     useAsTitle: 'title', // Shows the title in the Admin list view
   },
   access: {
+    // SEC-C2: Restrict create/update/delete to authenticated users
+    create: ({ req }) => !!req.user,
     read: () => true, // Allows public access so SvelteKit can fetch it
+    update: ({ req }) => !!req.user,
+    delete: ({ req }) => !!req.user,
   },
   fields: [
     {

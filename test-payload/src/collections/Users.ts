@@ -6,9 +6,15 @@ export const Users: CollectionConfig = {
     useAsTitle: 'email',
   },
   auth: true,
+  // SEC-L8: Explicit access control for user management
+  access: {
+    create: ({ req }) => !!req.user,
+    read: ({ req }) => !!req.user,
+    update: ({ req }) => !!req.user,
+    delete: ({ req }) => !!req.user,
+  },
   fields: [
     // Email added by default
-    // eeeeee
     // Add more fields as needed
   ],
 }

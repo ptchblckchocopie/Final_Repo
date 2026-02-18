@@ -35,6 +35,7 @@ export async function getIncomingCalls(
 		'where[to][equals]': username,
 		'where[type][equals]': 'offer',
 		'where[status][equals]': 'pending',
+		'where[createdAt][greater_than]': new Date(Date.now() - 30_000).toISOString(),
 		sort: '-createdAt',
 		limit: '10',
 	});

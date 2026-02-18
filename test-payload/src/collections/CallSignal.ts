@@ -6,10 +6,12 @@ export const CallSignals: CollectionConfig = {
     useAsTitle: 'callId',
   },
   access: {
+    // NOTE: Auth for all operations should be added when user auth is implemented
     create: () => true,
     read: () => true,
     update: () => true,
-    delete: () => true,
+    // SEC-C2: Restrict delete to authenticated users
+    delete: ({ req }) => !!req.user,
   },
   fields: [
     {
@@ -17,16 +19,19 @@ export const CallSignals: CollectionConfig = {
       type: 'text',
       required: true,
       index: true,
+      maxLength: 100,
     },
     {
       name: 'from',
       type: 'text',
       required: true,
+      maxLength: 50,
     },
     {
       name: 'to',
       type: 'text',
       required: true,
+      maxLength: 50,
     },
     {
       name: 'type',

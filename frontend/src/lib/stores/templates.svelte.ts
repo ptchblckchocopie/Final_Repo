@@ -71,14 +71,20 @@ export async function fetchUserTemplates(): Promise<void> {
 		hasFetched = true;
 	} catch (err) {
 		console.error('Failed to fetch templates:', err);
-		hasFetched = true;
+		// BUG-M5: Don't set hasFetched on error — allow retry on next call
 	} finally {
 		isLoading = false;
 	}
 }
 
 function dataUrlToFile(dataUrl: string, filename: string): File {
-	const [header, base64] = dataUrl.split(',');
+	// BUG-M6: Validate data URL format before parsing
+	if (!dataUrl.startsWith('data:') || !dataUrl.includes(',')) {
+		throw new Error('Invalid background image data URL format');
+	}
+	const commaIndex = dataUrl.indexOf(',');
+	const header = dataUrl.slice(0, commaIndex);
+	const base64 = dataUrl.slice(commaIndex + 1);
 	const mime = header.match(/:(.*?);/)?.[1] ?? 'image/png';
 	const bytes = atob(base64);
 	const arr = new Uint8Array(bytes.length);
