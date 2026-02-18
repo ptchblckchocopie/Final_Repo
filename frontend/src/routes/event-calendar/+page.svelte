@@ -1,7 +1,5 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { getIsDark } from '$lib/stores/theme.svelte';
-	import ThemeToggle from '$lib/components/ui/ThemeToggle.svelte';
 
 	interface CalendarEvent {
 		id: number;
@@ -14,8 +12,6 @@
 	}
 
 	let { data } = $props();
-
-	const isDark = $derived(getIsDark());
 
 	let localEvents = $state<CalendarEvent[] | null>(null);
 	const events = $derived(localEvents ?? data.events);
@@ -227,7 +223,7 @@
 </svelte:head>
 
 <!-- svelte-ignore a11y_no_static_element_interactions -->
-<div class="cal-page min-h-screen bg-gray-50 dark:bg-[#060a14]" class:dark={isDark} onmousemove={handleMouseMove}>
+<div class="cal-page dark min-h-screen bg-[#060a14]" onmousemove={handleMouseMove}>
 
 	<!-- ╔══════════════════════════════════════════════════════════════╗
 	     ║  HERO SECTION — Aurora Background                          ║
@@ -269,7 +265,7 @@
 				</div>
 
 				<h1 class="hero-title text-5xl font-black tracking-tight text-gray-950 dark:text-white sm:text-7xl lg:text-8xl">
-					Your
+					Veent
 					<span class="gradient-text-animated relative inline-block">Calendar</span>
 				</h1>
 
@@ -335,7 +331,7 @@
 				<div class="flex items-center justify-between">
 					<button
 						onclick={prevMonth}
-						class="nav-arrow group flex cursor-pointer items-center gap-1.5 rounded-xl border border-gray-300/80 bg-white/70 px-3 py-2 text-sm font-semibold text-gray-700 backdrop-blur-sm transition-all duration-300 hover:border-indigo-400 hover:bg-indigo-50 hover:text-indigo-700 hover:shadow-lg hover:shadow-indigo-500/10 dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-gray-300 dark:hover:border-indigo-500/40 dark:hover:bg-indigo-500/10 dark:hover:text-indigo-300 sm:px-4 sm:py-2.5"
+						class="nav-arrow group flex cursor-pointer items-center gap-1.5 rounded-xl border border-gray-300/80 bg-white/70 px-3 py-2 text-sm font-semibold text-gray-700 backdrop-blur-sm transition-all duration-300 hover:border-indigo-400 hover:bg-indigo-50 hover:text-indigo-700 hover:shadow-lg hover:shadow-indigo-500/10 dark:border-white/10 dark:bg-white/[0.06] dark:text-gray-200 dark:hover:border-indigo-500/40 dark:hover:bg-indigo-500/10 dark:hover:text-indigo-300 sm:px-4 sm:py-2.5"
 					>
 						<svg class="h-4 w-4 transition-transform duration-300 group-hover:-translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
 							<path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
@@ -346,19 +342,19 @@
 					<div class="flex flex-col items-center gap-2">
 						<div class="flex items-center gap-2 sm:gap-3">
 							<h2 class="month-title text-lg font-bold sm:text-2xl lg:text-3xl">
-								<span class="text-gray-950 dark:text-white">{MONTH_NAMES[currentMonth]}</span>
+								<span class="text-gray-900 dark:text-white">{MONTH_NAMES[currentMonth]}</span>
 								<span class="bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent dark:from-indigo-400 dark:to-violet-400">{currentYear}</span>
 							</h2>
 							<button
 								onclick={goToToday}
-								class="cursor-pointer rounded-lg border border-indigo-300 bg-gradient-to-r from-indigo-100 to-violet-100 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-indigo-700 transition-all duration-300 hover:border-indigo-400 hover:shadow-md hover:shadow-indigo-500/10 dark:border-indigo-500/30 dark:from-indigo-500/10 dark:to-violet-500/10 dark:text-indigo-400 dark:hover:border-indigo-500/50 sm:text-xs"
+								class="cursor-pointer rounded-lg border border-indigo-300 bg-gradient-to-r from-indigo-100 to-violet-100 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-indigo-700 transition-all duration-300 hover:border-indigo-400 hover:shadow-md hover:shadow-indigo-500/10 dark:border-indigo-500/30 dark:from-indigo-500/10 dark:to-violet-500/10 dark:text-indigo-300 dark:hover:border-indigo-500/50 sm:text-xs"
 							>
 								Today
 							</button>
 						</div>
 
 						<!-- Mini month dots -->
-						<div class="hidden items-center gap-1 rounded-lg border border-gray-200/40 bg-gray-100/60 px-2.5 py-1.5 dark:border-white/[0.06] dark:bg-white/[0.04] sm:flex">
+						<div class="hidden items-center gap-1 rounded-lg border border-gray-200/40 bg-gray-100/60 px-2.5 py-1.5 dark:border-white/[0.08] dark:bg-white/[0.06] sm:flex">
 							{#each miniMonthDays as d}
 								{@const hasEv = eventsForDay(d).length > 0}
 								{@const isT = isToday(d)}
@@ -369,7 +365,7 @@
 										{isT ? 'scale-150 !bg-indigo-500 shadow-sm shadow-indigo-500/60' :
 										 hasEv ? '!bg-rose-500 shadow-sm shadow-rose-400/40' :
 										 isSel ? '!bg-indigo-400' :
-										 '!bg-gray-400 dark:!bg-gray-600 hover:!bg-gray-500 dark:hover:!bg-gray-500'}"
+										 '!bg-gray-400 dark:!bg-gray-500 hover:!bg-gray-500 dark:hover:!bg-gray-400'}"
 									aria-label="Day {d}"
 								></button>
 							{/each}
@@ -377,10 +373,9 @@
 					</div>
 
 					<div class="flex items-center gap-2">
-						<ThemeToggle />
 						<button
 							onclick={nextMonth}
-							class="nav-arrow group flex cursor-pointer items-center gap-1.5 rounded-xl border border-gray-300/80 bg-white/70 px-3 py-2 text-sm font-semibold text-gray-700 backdrop-blur-sm transition-all duration-300 hover:border-indigo-400 hover:bg-indigo-50 hover:text-indigo-700 hover:shadow-lg hover:shadow-indigo-500/10 dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-gray-300 dark:hover:border-indigo-500/40 dark:hover:bg-indigo-500/10 dark:hover:text-indigo-300 sm:px-4 sm:py-2.5"
+							class="nav-arrow group flex cursor-pointer items-center gap-1.5 rounded-xl border border-gray-300/80 bg-white/70 px-3 py-2 text-sm font-semibold text-gray-700 backdrop-blur-sm transition-all duration-300 hover:border-indigo-400 hover:bg-indigo-50 hover:text-indigo-700 hover:shadow-lg hover:shadow-indigo-500/10 dark:border-white/10 dark:bg-white/[0.06] dark:text-gray-200 dark:hover:border-indigo-500/40 dark:hover:bg-indigo-500/10 dark:hover:text-indigo-300 sm:px-4 sm:py-2.5"
 						>
 							<span class="hidden sm:inline">Next</span>
 							<svg class="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
@@ -393,7 +388,7 @@
 
 			<!-- Month progress bar -->
 			{#if monthProgress > 0}
-				<div class="mb-4 h-1 overflow-hidden rounded-full bg-gray-200/60 dark:bg-white/[0.06] sm:mb-6">
+				<div class="mb-4 h-1 overflow-hidden rounded-full bg-gray-200/60 dark:bg-white/[0.08] sm:mb-6">
 					<div
 						class="h-full rounded-full bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 transition-all duration-700 ease-out"
 						style="width: {monthProgress}%"
@@ -408,10 +403,10 @@
 				<div class="min-w-0 flex-1">
 					<div class="calendar-glass overflow-hidden rounded-3xl">
 						<!-- Day Headers -->
-						<div class="grid grid-cols-7 border-b border-gray-200/40 bg-gradient-to-r from-gray-50/80 via-white/60 to-gray-50/80 dark:border-white/[0.04] dark:from-white/[0.03] dark:via-white/[0.01] dark:to-white/[0.03]">
+						<div class="grid grid-cols-7 border-b border-gray-200/60 bg-gradient-to-r from-gray-100/80 via-gray-50/60 to-gray-100/80 dark:border-white/[0.06] dark:from-white/[0.04] dark:via-white/[0.02] dark:to-white/[0.04]">
 							{#each DAY_NAMES as dayName, i}
 								<div
-									class="day-header py-3.5 text-center text-[10px] font-bold uppercase tracking-[0.15em] text-gray-500 dark:text-gray-500 sm:py-4 sm:text-xs"
+									class="day-header py-3.5 text-center text-[10px] font-bold uppercase tracking-[0.15em] text-gray-600 dark:text-gray-300 sm:py-4 sm:text-xs"
 									style="animation-delay: {i * 40}ms"
 								>
 									{dayName}
@@ -424,7 +419,7 @@
 							<div class="calendar-grid grid grid-cols-7" class:slide-in-left={monthDirection === 'left'} class:slide-in-right={monthDirection === 'right'}>
 								{#each calendarDays as day, i}
 									{#if day === null}
-										<div class="empty-cell border-b border-r border-gray-100/80 bg-gray-50/30 dark:border-white/[0.03] dark:bg-white/[0.008]" style="min-height: 88px;"></div>
+										<div class="empty-cell border-b border-r border-gray-200/60 bg-gray-50/50 dark:border-white/[0.04] dark:bg-white/[0.01]" style="min-height: 88px;"></div>
 									{:else}
 										{@const dayEvents = eventsForDay(day)}
 										{@const isBusy = dayEvents.length > 0}
@@ -432,14 +427,14 @@
 										{@const todayCheck = isToday(day)}
 										<button
 											onclick={() => selectDay(day)}
-											class="day-cell group relative cursor-pointer border-b border-r border-gray-100/80 p-1.5 text-left transition-all duration-300 dark:border-white/[0.03] sm:p-2
+											class="day-cell group relative cursor-pointer border-b border-r border-gray-200/60 bg-white/40 p-1.5 text-left transition-all duration-300 dark:border-white/[0.04] dark:bg-transparent sm:p-2
 												{isBusy ? 'busy-cell' : ''}
 												{isSelected ? 'selected-cell' : ''}
 												{todayCheck ? 'today-cell' : ''}"
 											style="min-height: 88px; animation-delay: {(i % 7) * 25 + Math.floor(i / 7) * 35}ms;"
 										>
 											<!-- Hover gradient -->
-											<div class="pointer-events-none absolute inset-0 bg-gradient-to-br from-indigo-500/0 via-violet-500/0 to-purple-500/0 opacity-0 transition-all duration-500 group-hover:opacity-100 group-hover:from-indigo-50/70 group-hover:via-violet-50/40 group-hover:to-purple-50/20 dark:group-hover:from-indigo-500/[0.06] dark:group-hover:via-violet-500/[0.04] dark:group-hover:to-purple-500/[0.02]"></div>
+											<div class="pointer-events-none absolute inset-0 bg-gradient-to-br from-indigo-500/0 via-violet-500/0 to-purple-500/0 opacity-0 transition-all duration-500 group-hover:opacity-100 group-hover:from-indigo-50/70 group-hover:via-violet-50/40 group-hover:to-purple-50/20 dark:group-hover:from-indigo-500/[0.08] dark:group-hover:via-violet-500/[0.05] dark:group-hover:to-purple-500/[0.03]"></div>
 
 											<!-- Hover top accent -->
 											<div class="pointer-events-none absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 opacity-0 transition-opacity duration-300 group-hover:opacity-60"></div>
@@ -447,7 +442,7 @@
 											<!-- Selected ring -->
 											{#if isSelected}
 												<div class="pointer-events-none absolute inset-0 ring-2 ring-inset ring-indigo-500/50 dark:ring-indigo-400/40"></div>
-												<div class="pointer-events-none absolute inset-0 bg-indigo-50/50 dark:bg-indigo-500/[0.08]"></div>
+												<div class="pointer-events-none absolute inset-0 bg-indigo-50/50 dark:bg-indigo-500/[0.1]"></div>
 											{/if}
 
 											<!-- Cell content -->
@@ -459,7 +454,7 @@
 																? 'today-badge bg-gradient-to-br from-indigo-500 via-violet-500 to-purple-600 text-white shadow-lg shadow-indigo-500/40'
 																: isSelected
 																	? 'text-indigo-600 dark:text-indigo-300 font-bold'
-																	: 'text-gray-700 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-gray-200'}"
+																	: 'text-gray-800 group-hover:text-gray-950 dark:text-gray-300 dark:group-hover:text-white'}"
 													>
 														{day}
 													</span>
@@ -473,12 +468,12 @@
 												{#if dayEvents.length > 0}
 													<div class="mt-1 space-y-0.5 sm:mt-1.5 sm:space-y-1">
 														{#each dayEvents.slice(0, 2) as ev}
-															<div class="event-pill truncate rounded-md border border-rose-200/50 bg-gradient-to-r from-rose-50/80 to-pink-50/60 px-1.5 py-0.5 text-[9px] font-medium leading-tight text-rose-600 dark:border-rose-500/20 dark:from-rose-500/15 dark:to-pink-500/10 dark:text-rose-300 sm:text-[11px]">
+															<div class="event-pill truncate rounded-md border border-rose-200/60 bg-gradient-to-r from-rose-50 to-pink-50/80 px-1.5 py-0.5 text-[9px] font-medium leading-tight text-rose-700 dark:border-rose-500/25 dark:from-rose-500/15 dark:to-pink-500/10 dark:text-rose-300 sm:text-[11px]">
 																{ev.title}
 															</div>
 														{/each}
 														{#if dayEvents.length > 2}
-															<div class="text-[9px] font-medium text-gray-400 dark:text-gray-600 sm:text-[10px]">+{dayEvents.length - 2} more</div>
+															<div class="text-[9px] font-medium text-gray-500 dark:text-gray-400 sm:text-[10px]">+{dayEvents.length - 2} more</div>
 														{/if}
 													</div>
 												{/if}
@@ -507,7 +502,7 @@
 								<!-- Header -->
 								<div class="mb-5 flex items-center justify-between gap-3">
 									<div class="min-w-0">
-										<p class="mb-0.5 text-[10px] font-bold uppercase tracking-[0.15em] text-indigo-500 dark:text-indigo-400">Selected</p>
+										<p class="mb-0.5 text-[10px] font-bold uppercase tracking-[0.15em] text-indigo-600 dark:text-indigo-400">Selected</p>
 										<h3 class="truncate text-lg font-bold text-gray-900 dark:text-white sm:text-xl">
 											{MONTH_NAMES[currentMonth]} {selectedDay}
 										</h3>
@@ -537,14 +532,14 @@
 												</div>
 
 												<!-- Event card -->
-												<div class="event-card group/card min-w-0 flex-1 rounded-xl border border-gray-200/60 bg-white/60 p-3.5 backdrop-blur-sm transition-all duration-300 hover:border-gray-300/60 hover:bg-white/80 hover:shadow-lg hover:shadow-gray-900/5 dark:border-white/[0.06] dark:bg-white/[0.03] dark:hover:border-white/[0.1] dark:hover:bg-white/[0.06] dark:hover:shadow-black/20 sm:p-4">
+												<div class="event-card group/card min-w-0 flex-1 rounded-xl border border-gray-200/60 bg-white/70 p-3.5 backdrop-blur-sm transition-all duration-300 hover:border-gray-300/60 hover:bg-white/90 hover:shadow-lg hover:shadow-gray-900/5 dark:border-white/[0.08] dark:bg-white/[0.04] dark:hover:border-white/[0.12] dark:hover:bg-white/[0.07] dark:hover:shadow-black/20 sm:p-4">
 													<div class="flex items-start justify-between gap-2">
 														<div class="min-w-0 flex-1">
 															<h4 class="truncate text-sm font-semibold text-gray-900 dark:text-white">{ev.title}</h4>
 															{#if ev.description}
-																<p class="mt-1 line-clamp-2 text-xs leading-relaxed text-gray-500 dark:text-gray-400">{ev.description}</p>
+																<p class="mt-1 line-clamp-2 text-xs leading-relaxed text-gray-600 dark:text-gray-300">{ev.description}</p>
 															{/if}
-															<p class="mt-2 inline-flex items-center gap-1 rounded-md border border-gray-200/60 bg-gray-50/80 px-2 py-0.5 text-[10px] font-medium text-gray-500 dark:border-white/[0.06] dark:bg-white/[0.04] dark:text-gray-500">
+															<p class="mt-2 inline-flex items-center gap-1 rounded-md border border-gray-200/60 bg-gray-100/80 px-2 py-0.5 text-[10px] font-medium text-gray-600 dark:border-white/[0.08] dark:bg-white/[0.06] dark:text-gray-300">
 																<svg class="h-2.5 w-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
 																	<path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
 																</svg>
@@ -558,7 +553,7 @@
 														<button
 															onclick={() => deleteEvent(ev.id)}
 															disabled={deletingId === ev.id}
-															class="shrink-0 cursor-pointer rounded-lg border border-gray-200/60 bg-white/80 p-1.5 text-gray-400 transition-all duration-300 hover:border-rose-300 hover:bg-rose-50 hover:text-rose-500 hover:shadow-md hover:shadow-rose-500/10 disabled:cursor-not-allowed disabled:opacity-50 dark:border-white/[0.06] dark:bg-white/[0.04] dark:text-gray-500 dark:hover:border-rose-500/30 dark:hover:bg-rose-500/10 dark:hover:text-rose-400 sm:p-2"
+															class="shrink-0 cursor-pointer rounded-lg border border-gray-200/60 bg-white/80 p-1.5 text-gray-400 transition-all duration-300 hover:border-rose-300 hover:bg-rose-50 hover:text-rose-500 hover:shadow-md hover:shadow-rose-500/10 disabled:cursor-not-allowed disabled:opacity-50 dark:border-white/[0.08] dark:bg-white/[0.06] dark:text-gray-400 dark:hover:border-rose-500/30 dark:hover:bg-rose-500/10 dark:hover:text-rose-400 sm:p-2"
 															aria-label="Delete event"
 														>
 															{#if deletingId === ev.id}
@@ -579,8 +574,8 @@
 									</div>
 								{:else}
 									<!-- Empty state -->
-									<div class="flex flex-col items-center rounded-2xl border border-dashed border-gray-200/80 bg-gradient-to-b from-gray-50/50 to-white py-10 text-center dark:border-white/[0.06] dark:from-white/[0.02] dark:to-transparent">
-										<div class="mb-4 text-gray-300 dark:text-gray-700">
+									<div class="flex flex-col items-center rounded-2xl border border-dashed border-gray-300/80 bg-gradient-to-b from-gray-50/60 to-white py-10 text-center dark:border-white/[0.08] dark:from-white/[0.03] dark:to-transparent">
+										<div class="mb-4 text-gray-400 dark:text-gray-500">
 											<svg viewBox="0 0 80 80" class="h-16 w-16">
 												<rect x="12" y="20" width="56" height="48" rx="6" fill="none" stroke="currentColor" stroke-width="2" opacity="0.4" />
 												<rect x="12" y="20" width="56" height="14" rx="6" fill="currentColor" opacity="0.06" />
@@ -590,15 +585,15 @@
 												<path d="M37 50h6M40 47v6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.3" />
 											</svg>
 										</div>
-										<p class="text-sm font-medium text-gray-500 dark:text-gray-500">No events</p>
-										<p class="mt-1 text-xs text-gray-400 dark:text-gray-600">Click "Add" to mark this day as busy</p>
+										<p class="text-sm font-medium text-gray-600 dark:text-gray-300">No events</p>
+										<p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Click "Add" to mark this day as busy</p>
 									</div>
 								{/if}
 							</div>
 						{:else}
 							<!-- No day selected placeholder -->
 							<div class="flex flex-col items-center px-6 py-16 text-center">
-								<div class="mb-5 text-gray-300 dark:text-gray-700">
+								<div class="mb-5 text-gray-400 dark:text-gray-500">
 									<svg viewBox="0 0 100 100" class="h-20 w-20 sm:h-24 sm:w-24">
 										<rect x="15" y="25" width="70" height="60" rx="8" fill="none" stroke="currentColor" stroke-width="2" opacity="0.3" />
 										<rect x="15" y="25" width="70" height="16" rx="8" fill="currentColor" opacity="0.05" />
@@ -612,11 +607,81 @@
 										<circle cx="65" cy="55" r="6" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.15" class="placeholder-ring" />
 									</svg>
 								</div>
-								<p class="text-sm font-semibold text-gray-500 dark:text-gray-500">Select a day</p>
-								<p class="mt-1 max-w-[200px] text-xs leading-relaxed text-gray-400 dark:text-gray-600">Click any day on the calendar to view or add events</p>
+								<p class="text-sm font-semibold text-gray-600 dark:text-gray-300">Select a day</p>
+								<p class="mt-1 max-w-[200px] text-xs leading-relaxed text-gray-500 dark:text-gray-400">Click any day on the calendar to view or add events</p>
 							</div>
 						{/if}
 					</div>
+				</div>
+			</div>
+
+			<!-- Monthly Events List -->
+			<div class="mt-8">
+				<div class="glass-card overflow-hidden rounded-3xl">
+					<div class="border-b border-white/[0.06] px-5 py-4 sm:px-6">
+						<div class="flex items-center justify-between">
+							<div class="flex items-center gap-3">
+								<div class="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-500/15 text-indigo-400">
+									<svg class="h-4.5 w-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+										<path stroke-linecap="round" stroke-linejoin="round" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 12h.007v.008H3.75V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm-.375 5.25h.007v.008H3.75v-.008zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+									</svg>
+								</div>
+								<div>
+									<h3 class="text-sm font-bold text-white sm:text-base">{MONTH_NAMES[currentMonth]} {currentYear} Events</h3>
+									<p class="text-xs text-gray-400">{events.length} event{events.length !== 1 ? 's' : ''} this month</p>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					{#if events.length > 0}
+						<div class="divide-y divide-white/[0.04]">
+							{#each events as ev, i}
+								{@const start = ev.start_date.slice(0, 10)}
+								{@const end = ev.end_date.slice(0, 10)}
+								{@const isSingleDay = start === end}
+								{@const startDate = new Date(start + 'T00:00:00')}
+								{@const endDate = new Date(end + 'T00:00:00')}
+								{@const diffDays = Math.round((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)) + 1}
+								<div
+									class="month-event-item flex items-center gap-4 px-5 py-3.5 transition-colors duration-200 hover:bg-white/[0.03] sm:px-6"
+									style="animation-delay: {i * 40}ms"
+								>
+									<!-- Date badge -->
+									<div class="flex h-11 w-11 shrink-0 flex-col items-center justify-center rounded-xl border border-white/[0.06] bg-white/[0.04]">
+										<span class="text-[10px] font-semibold uppercase leading-none text-indigo-400">{MONTH_NAMES[startDate.getMonth()].slice(0, 3)}</span>
+										<span class="text-base font-bold leading-tight text-white">{startDate.getDate()}</span>
+									</div>
+
+									<!-- Event info -->
+									<div class="min-w-0 flex-1">
+										<h4 class="truncate text-sm font-semibold text-white">{ev.title}</h4>
+										<p class="mt-0.5 text-xs text-gray-400">
+											{#if isSingleDay}
+												{start}
+											{:else}
+												{start} → {end}
+												<span class="ml-1 inline-flex items-center rounded-md bg-indigo-500/15 px-1.5 py-0.5 text-[10px] font-medium text-indigo-300">{diffDays} days</span>
+											{/if}
+										</p>
+									</div>
+
+									<!-- Indicator dot -->
+									<div class="flex h-2 w-2 shrink-0 rounded-full bg-gradient-to-br from-rose-400 to-pink-500 shadow-sm shadow-rose-500/40"></div>
+								</div>
+							{/each}
+						</div>
+					{:else}
+						<div class="flex flex-col items-center py-12 text-center">
+							<div class="mb-3 text-gray-500">
+								<svg class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+									<path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+								</svg>
+							</div>
+							<p class="text-sm font-medium text-gray-300">No events this month</p>
+							<p class="mt-1 text-xs text-gray-500">Select a day and click "Add" to create one</p>
+						</div>
+					{/if}
 				</div>
 			</div>
 		</div>
@@ -629,8 +694,7 @@
 {#if showAddModal}
 	<!-- svelte-ignore a11y_no_static_element_interactions -->
 	<div
-		class="modal-backdrop fixed inset-0 z-[9998] flex items-center justify-center"
-		class:dark={isDark}
+		class="modal-backdrop dark fixed inset-0 z-[9998] flex items-center justify-center"
 		onclick={(e) => { if (e.target === e.currentTarget) showAddModal = false; }}
 		onkeydown={(e) => { if (e.key === 'Escape') showAddModal = false; }}
 	>
@@ -646,7 +710,7 @@
 					<div class="mb-6 flex items-center justify-between">
 						<div>
 							<h3 class="text-lg font-bold text-gray-900 dark:text-white sm:text-xl">Add Busy Day</h3>
-							<p class="mt-0.5 text-xs text-gray-500 dark:text-gray-500">Mark a day or range as busy</p>
+							<p class="mt-0.5 text-xs text-gray-500 dark:text-gray-400">Mark a day or range as busy</p>
 						</div>
 						<button
 							onclick={() => (showAddModal = false)}
@@ -680,7 +744,7 @@
 
 						<div class="form-field" style="animation-delay: 40ms">
 							<label for="cal-desc" class="mb-1.5 block text-xs font-semibold text-gray-700 dark:text-gray-300">
-								Description <span class="font-normal text-gray-400 dark:text-gray-600">(optional)</span>
+								Description <span class="font-normal text-gray-400 dark:text-gray-500">(optional)</span>
 							</label>
 							<textarea
 								id="cal-desc"
@@ -769,11 +833,11 @@
 		background: conic-gradient(
 			from 220deg at 50% 48%,
 			transparent 0deg,
-			rgba(99, 102, 241, 0.03) 60deg,
+			rgba(99, 102, 241, 0.18) 60deg,
 			transparent 120deg,
-			rgba(139, 92, 246, 0.02) 200deg,
+			rgba(139, 92, 246, 0.12) 200deg,
 			transparent 280deg,
-			rgba(99, 102, 241, 0.02) 340deg,
+			rgba(99, 102, 241, 0.1) 340deg,
 			transparent 360deg
 		);
 		animation: auroraRotate 35s linear infinite;
@@ -782,40 +846,16 @@
 	.aurora-layer-2 {
 		inset: -30%;
 		background:
-			radial-gradient(ellipse 70% 50% at 30% 50%, rgba(99, 102, 241, 0.04), transparent 65%),
-			radial-gradient(ellipse 60% 40% at 70% 60%, rgba(139, 92, 246, 0.03), transparent 55%),
-			radial-gradient(ellipse 50% 50% at 50% 30%, rgba(168, 85, 247, 0.02), transparent 60%);
+			radial-gradient(ellipse 70% 50% at 30% 50%, rgba(99, 102, 241, 0.2), transparent 65%),
+			radial-gradient(ellipse 60% 40% at 70% 60%, rgba(139, 92, 246, 0.15), transparent 55%),
+			radial-gradient(ellipse 50% 50% at 50% 30%, rgba(168, 85, 247, 0.1), transparent 60%);
 		animation: auroraPulse 10s ease-in-out infinite alternate;
 	}
 
 	.aurora-layer-3 {
 		inset: 0;
-		background: linear-gradient(180deg, transparent 0%, rgba(99, 102, 241, 0.015) 50%, transparent 100%);
-		animation: auroraShimmer 8s ease-in-out infinite alternate;
-	}
-
-	:global(.dark) .aurora-layer-1 {
-		background: conic-gradient(
-			from 220deg at 50% 48%,
-			transparent 0deg,
-			rgba(99, 102, 241, 0.18) 60deg,
-			transparent 120deg,
-			rgba(139, 92, 246, 0.12) 200deg,
-			transparent 280deg,
-			rgba(99, 102, 241, 0.1) 340deg,
-			transparent 360deg
-		);
-	}
-
-	:global(.dark) .aurora-layer-2 {
-		background:
-			radial-gradient(ellipse 70% 50% at 30% 50%, rgba(99, 102, 241, 0.2), transparent 65%),
-			radial-gradient(ellipse 60% 40% at 70% 60%, rgba(139, 92, 246, 0.15), transparent 55%),
-			radial-gradient(ellipse 50% 50% at 50% 30%, rgba(168, 85, 247, 0.1), transparent 60%);
-	}
-
-	:global(.dark) .aurora-layer-3 {
 		background: linear-gradient(180deg, transparent 0%, rgba(99, 102, 241, 0.06) 50%, transparent 100%);
+		animation: auroraShimmer 8s ease-in-out infinite alternate;
 	}
 
 	@keyframes auroraRotate {
@@ -839,10 +879,8 @@
 		height: 1px;
 		border-radius: 999px;
 		pointer-events: none;
-		opacity: 0.06;
+		opacity: 0.2;
 	}
-
-	:global(.dark) .light-streak { opacity: 0.2; }
 
 	.streak-1 {
 		width: 300px;
@@ -888,62 +926,36 @@
 	   GRID OVERLAY
 	   ══════════════════════════════════════════════════════════════ */
 	.grid-overlay {
-		opacity: 0.015;
-		background-image:
-			linear-gradient(rgba(99, 102, 241, 0.2) 1px, transparent 1px),
-			linear-gradient(90deg, rgba(99, 102, 241, 0.2) 1px, transparent 1px);
-		background-size: 50px 50px;
-	}
-
-	:global(.dark) .grid-overlay {
 		opacity: 0.02;
 		background-image:
 			linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
 			linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+		background-size: 50px 50px;
 	}
 
 	/* ══════════════════════════════════════════════════════════════
 	   GLASS MORPHISM
 	   ══════════════════════════════════════════════════════════════ */
 	.glass-card {
-		background: linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.55) 100%);
-		border: 1px solid rgba(0, 0, 0, 0.08);
+		background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+		border: 1px solid rgba(255, 255, 255, 0.08);
 		backdrop-filter: blur(24px);
 		-webkit-backdrop-filter: blur(24px);
 		box-shadow:
-			0 8px 32px rgba(0, 0, 0, 0.06),
-			0 2px 8px rgba(0, 0, 0, 0.04),
-			inset 0 1px 0 rgba(255, 255, 255, 0.9);
-	}
-
-	:global(.dark) .glass-card {
-		background: linear-gradient(135deg, rgba(255, 255, 255, 0.035) 0%, rgba(255, 255, 255, 0.012) 100%);
-		border: 1px solid rgba(255, 255, 255, 0.06);
-		box-shadow:
 			0 8px 32px rgba(0, 0, 0, 0.35),
 			0 2px 8px rgba(0, 0, 0, 0.2),
-			inset 0 1px 0 rgba(255, 255, 255, 0.04);
+			inset 0 1px 0 rgba(255, 255, 255, 0.05);
 	}
 
 	.calendar-glass {
-		background: linear-gradient(180deg, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.65) 100%);
-		border: 1px solid rgba(0, 0, 0, 0.05);
+		background: linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+		border: 1px solid rgba(255, 255, 255, 0.08);
 		backdrop-filter: blur(40px);
 		-webkit-backdrop-filter: blur(40px);
 		box-shadow:
-			0 20px 60px rgba(0, 0, 0, 0.06),
-			0 4px 16px rgba(0, 0, 0, 0.03),
-			inset 0 1px 0 rgba(255, 255, 255, 1),
-			inset 0 -1px 0 rgba(0, 0, 0, 0.02);
-	}
-
-	:global(.dark) .calendar-glass {
-		background: linear-gradient(180deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.015) 100%);
-		border: 1px solid rgba(255, 255, 255, 0.06);
-		box-shadow:
 			0 20px 60px rgba(0, 0, 0, 0.5),
 			0 4px 16px rgba(0, 0, 0, 0.25),
-			inset 0 1px 0 rgba(255, 255, 255, 0.04),
+			inset 0 1px 0 rgba(255, 255, 255, 0.05),
 			inset 0 -1px 0 rgba(0, 0, 0, 0.15);
 	}
 
@@ -1055,24 +1067,15 @@
 
 	/* Busy cell */
 	.busy-cell {
-		background: linear-gradient(135deg, rgba(244, 63, 94, 0.04) 0%, rgba(236, 72, 153, 0.02) 100%);
+		background: linear-gradient(135deg, rgba(244, 63, 94, 0.06) 0%, rgba(236, 72, 153, 0.03) 100%);
 	}
 	.busy-cell:hover {
-		background: linear-gradient(135deg, rgba(244, 63, 94, 0.08) 0%, rgba(236, 72, 153, 0.04) 100%);
-	}
-	:global(.dark) .busy-cell {
-		background: linear-gradient(135deg, rgba(244, 63, 94, 0.04) 0%, rgba(236, 72, 153, 0.015) 100%);
-	}
-	:global(.dark) .busy-cell:hover {
-		background: linear-gradient(135deg, rgba(244, 63, 94, 0.08) 0%, rgba(236, 72, 153, 0.04) 100%);
+		background: linear-gradient(135deg, rgba(244, 63, 94, 0.1) 0%, rgba(236, 72, 153, 0.06) 100%);
 	}
 
 	/* Today cell */
 	.today-cell {
-		background: linear-gradient(135deg, rgba(99, 102, 241, 0.06) 0%, rgba(139, 92, 246, 0.03) 100%);
-	}
-	:global(.dark) .today-cell {
-		background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(139, 92, 246, 0.025) 100%);
+		background: linear-gradient(135deg, rgba(99, 102, 241, 0.08) 0%, rgba(139, 92, 246, 0.04) 100%);
 	}
 
 	.today-badge {
@@ -1089,12 +1092,15 @@
 		transition: all 0.25s ease;
 	}
 	.day-cell:hover .event-pill {
-		border-color: rgba(244, 63, 94, 0.3);
-		background: linear-gradient(to right, rgba(244, 63, 94, 0.1), rgba(236, 72, 153, 0.06));
+		border-color: rgba(244, 63, 94, 0.35);
+		background: linear-gradient(to right, rgba(244, 63, 94, 0.2), rgba(236, 72, 153, 0.14));
 	}
-	:global(.dark) .day-cell:hover .event-pill {
-		border-color: rgba(244, 63, 94, 0.3);
-		background: linear-gradient(to right, rgba(244, 63, 94, 0.18), rgba(236, 72, 153, 0.12));
+
+	/* ══════════════════════════════════════════════════════════════
+	   MONTHLY EVENTS LIST
+	   ══════════════════════════════════════════════════════════════ */
+	.month-event-item {
+		animation: fadeSlideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
 	}
 
 	/* ══════════════════════════════════════════════════════════════
@@ -1135,13 +1141,10 @@
 	   MODAL
 	   ══════════════════════════════════════════════════════════════ */
 	.modal-backdrop {
-		background: rgba(0, 0, 0, 0.25);
+		background: rgba(0, 0, 0, 0.55);
 		backdrop-filter: blur(12px);
 		-webkit-backdrop-filter: blur(12px);
 		animation: backdropIn 0.25s ease-out both;
-	}
-	:global(.dark) .modal-backdrop {
-		background: rgba(0, 0, 0, 0.55);
 	}
 
 	.modal-content {
@@ -1175,11 +1178,6 @@
 	/* Input focus glow */
 	.modal-input:focus {
 		box-shadow:
-			0 0 0 2px rgba(99, 102, 241, 0.08),
-			0 6px 20px rgba(99, 102, 241, 0.06);
-	}
-	:global(.dark) .modal-input:focus {
-		box-shadow:
 			0 0 0 2px rgba(99, 102, 241, 0.12),
 			0 6px 20px rgba(99, 102, 241, 0.08);
 	}
@@ -1198,8 +1196,8 @@
 			0 0 0 1px rgba(99, 102, 241, 0.1);
 	}
 
-	/* Date inputs dark mode */
-	:global(.dark) input[type="date"]::-webkit-calendar-picker-indicator {
+	/* Date inputs */
+	input[type="date"]::-webkit-calendar-picker-indicator {
 		filter: invert(0.6);
 		cursor: pointer;
 	}
