@@ -53,7 +53,7 @@
 </script>
 
 <svelte:head>
-	<title>Ticket Generator - Veent</title>
+	<title>Ticket Generator - Veent Tix</title>
 </svelte:head>
 
 <svelte:window onbeforeunload={handleBeforeUnload} />

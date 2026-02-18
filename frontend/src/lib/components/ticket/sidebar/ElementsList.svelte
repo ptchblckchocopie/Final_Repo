@@ -37,7 +37,7 @@
 					tabindex="0"
 					onclick={() => handleSelect(el.id)}
 					onkeydown={(e) => e.key === 'Enter' && handleSelect(el.id)}
-					class="flex cursor-pointer items-center justify-between rounded px-2 py-1.5 text-xs transition-colors {isSelected(el.id) ? 'bg-indigo-100 dark:bg-indigo-900/40 text-indigo-800 dark:text-indigo-200' : 'hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300'}"
+					class="flex cursor-pointer items-center justify-between rounded px-2 py-1.5 text-xs transition-colors {isSelected(el.id) ? 'bg-red-100 dark:bg-red-900/40 text-red-800 dark:text-red-200' : 'hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300'}"
 				>
 					<span class="truncate">
 						<span class="font-mono text-gray-400 dark:text-gray-500">{i + 1}.</span>

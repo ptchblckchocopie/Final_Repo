@@ -17,6 +17,7 @@ let onlineUsers = $state<string[]>([]);
 let currentUsername = '';
 let onMessageCallback: ((msg: PayloadMessage) => void) | null = null;
 let drawCallbacks: DrawCallbacks | null = null;
+let strokeBuffer: Stroke[] = [];
 let reconnectTimer: ReturnType<typeof setTimeout> | null = null;
 let reconnectAttempt = 0;
 const MAX_BACKOFF = 15_000;
@@ -50,6 +51,7 @@ export function disconnectChat() {
 	clearReconnectTimer();
 	onMessageCallback = null;
 	drawCallbacks = null;
+	strokeBuffer = [];
 	currentUsername = '';
 	reconnectAttempt = 0;
 	if (socket) {
@@ -69,6 +71,10 @@ export function sendChatMessage(content: string) {
 
 export function registerDrawCallbacks(callbacks: DrawCallbacks) {
 	drawCallbacks = callbacks;
+	// Flush any strokes that arrived while the board was closed
+	if (strokeBuffer.length > 0) {
+		callbacks.onSync(strokeBuffer);
+	}
 }
 
 export function unregisterDrawCallbacks() {
@@ -127,14 +133,18 @@ function openSocket() {
 			onMessageCallback(data.message as PayloadMessage);
 		} else if (data.type === 'users_online' && data.users) {
 			onlineUsers = data.users;
-		} else if (data.type === 'draw_stroke' && drawCallbacks) {
-			drawCallbacks.onStroke(data.stroke as Stroke);
-		} else if (data.type === 'draw_stroke_progress' && drawCallbacks) {
-			drawCallbacks.onStrokeProgress(data as unknown as StrokeProgress);
-		} else if (data.type === 'draw_clear' && drawCallbacks) {
-			drawCallbacks.onClear();
-		} else if (data.type === 'draw_sync' && drawCallbacks) {
-			drawCallbacks.onSync(data.strokes as Stroke[]);
+		} else if (data.type === 'draw_stroke') {
+			const stroke = data.stroke as Stroke;
+			strokeBuffer.push(stroke);
+			if (drawCallbacks) drawCallbacks.onStroke(stroke);
+		} else if (data.type === 'draw_stroke_progress') {
+			if (drawCallbacks) drawCallbacks.onStrokeProgress(data as unknown as StrokeProgress);
+		} else if (data.type === 'draw_clear') {
+			strokeBuffer = [];
+			if (drawCallbacks) drawCallbacks.onClear();
+		} else if (data.type === 'draw_sync') {
+			strokeBuffer = data.strokes as Stroke[];
+			if (drawCallbacks) drawCallbacks.onSync(strokeBuffer);
 		} else if (data.type === 'error') {
 			console.warn('[chat-ws] Server error:', data.message || data);
 		}

@@ -60,15 +60,15 @@
 		<div class="flex gap-1">
 			<button
 				onclick={() => updateStyle({ fontBold: !element.styles.fontBold })}
-				class="cursor-pointer rounded border px-3 py-1.5 text-xs font-bold {element.styles.fontBold ? 'border-indigo-400 bg-indigo-100 dark:bg-indigo-900/40 text-indigo-800 dark:text-indigo-200' : 'border-gray-300 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700'}"
+				class="cursor-pointer rounded border px-3 py-1.5 text-xs font-bold {element.styles.fontBold ? 'border-red-400 bg-red-100 dark:bg-red-900/40 text-red-800 dark:text-red-200' : 'border-gray-300 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700'}"
 			>B</button>
 			<button
 				onclick={() => updateStyle({ fontItalic: !element.styles.fontItalic })}
-				class="cursor-pointer rounded border px-3 py-1.5 text-xs italic {element.styles.fontItalic ? 'border-indigo-400 bg-indigo-100 dark:bg-indigo-900/40 text-indigo-800 dark:text-indigo-200' : 'border-gray-300 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700'}"
+				class="cursor-pointer rounded border px-3 py-1.5 text-xs italic {element.styles.fontItalic ? 'border-red-400 bg-red-100 dark:bg-red-900/40 text-red-800 dark:text-red-200' : 'border-gray-300 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700'}"
 			>I</button>
 			<button
 				onclick={() => updateStyle({ fontUnderline: !element.styles.fontUnderline })}
-				class="cursor-pointer rounded border px-3 py-1.5 text-xs underline {element.styles.fontUnderline ? 'border-indigo-400 bg-indigo-100 dark:bg-indigo-900/40 text-indigo-800 dark:text-indigo-200' : 'border-gray-300 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700'}"
+				class="cursor-pointer rounded border px-3 py-1.5 text-xs underline {element.styles.fontUnderline ? 'border-red-400 bg-red-100 dark:bg-red-900/40 text-red-800 dark:text-red-200' : 'border-gray-300 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700'}"
 			>U</button>
 		</div>
 	</div>
@@ -104,7 +104,7 @@
 				{#each [['left', '⬅'], ['center', '⬆'], ['right', '➡']] as [val, icon]}
 					<button
 						onclick={() => updateStyle({ horizontalAlign: val as HAlign })}
-						class="flex-1 cursor-pointer py-1 text-xs {element.styles.horizontalAlign === val ? 'bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300' : 'text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700'}"
+						class="flex-1 cursor-pointer py-1 text-xs {element.styles.horizontalAlign === val ? 'bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300' : 'text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700'}"
 					>{icon}</button>
 				{/each}
 			</div>
@@ -115,7 +115,7 @@
 				{#each [['top', 'T'], ['center', 'M'], ['bottom', 'B']] as [val, icon]}
 					<button
 						onclick={() => updateStyle({ verticalAlign: val as VAlign })}
-						class="flex-1 cursor-pointer py-1 text-xs {element.styles.verticalAlign === val ? 'bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300' : 'text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700'}"
+						class="flex-1 cursor-pointer py-1 text-xs {element.styles.verticalAlign === val ? 'bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300' : 'text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700'}"
 					>{icon}</button>
 				{/each}
 			</div>

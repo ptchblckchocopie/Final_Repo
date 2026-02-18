@@ -21,15 +21,15 @@
 </script>
 
 <svelte:head>
-	<title>Contact Us - Veent</title>
+	<title>Contact Us - Veent Tix</title>
 </svelte:head>
 
 <!-- Hero Header -->
 <section class="relative overflow-hidden bg-slate-900 py-24 text-white">
-	<div class="absolute inset-0 bg-gradient-to-br from-indigo-600/15 via-transparent to-purple-600/10"></div>
+	<div class="absolute inset-0 bg-gradient-to-br from-red-600/15 via-transparent to-red-600/10"></div>
 	<div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 		<div class="mx-auto max-w-3xl text-center">
-			<p class="mb-4 text-sm font-semibold uppercase tracking-wider text-indigo-400">Get in touch</p>
+			<p class="mb-4 text-sm font-semibold uppercase tracking-wider text-red-400">Get in touch</p>
 			<h1 class="text-4xl font-extrabold tracking-tight sm:text-5xl">Contact Us</h1>
 			<p class="mt-6 text-lg leading-relaxed text-gray-400">
 				Have questions or feedback? We'd love to hear from you.
@@ -54,7 +54,7 @@
 								type="text"
 								bind:value={name}
 								required
-								class="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900 transition-all focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:outline-none"
+								class="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900 transition-all focus:border-red-500 focus:bg-white focus:ring-2 focus:ring-red-500/20 focus:outline-none"
 								placeholder="Your name"
 							/>
 						</div>
@@ -66,7 +66,7 @@
 								type="email"
 								bind:value={email}
 								required
-								class="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900 transition-all focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:outline-none"
+								class="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900 transition-all focus:border-red-500 focus:bg-white focus:ring-2 focus:ring-red-500/20 focus:outline-none"
 								placeholder="you@example.com"
 							/>
 						</div>
@@ -78,7 +78,7 @@
 								bind:value={message}
 								required
 								rows="5"
-								class="w-full resize-none rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900 transition-all focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:outline-none"
+								class="w-full resize-none rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900 transition-all focus:border-red-500 focus:bg-white focus:ring-2 focus:ring-red-500/20 focus:outline-none"
 								placeholder="How can we help you?"
 							></textarea>
 						</div>
@@ -86,7 +86,7 @@
 						<button
 							type="submit"
 							disabled={sending}
-							class="group inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-indigo-500 px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-indigo-600/25 transition-all hover:shadow-xl hover:shadow-indigo-600/30 hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50"
+							class="group inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-red-600 to-red-500 px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-red-600/25 transition-all hover:shadow-xl hover:shadow-red-600/30 hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50"
 						>
 							{#if sending}
 								<svg class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
@@ -112,19 +112,19 @@
 						icon: 'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z',
 						label: 'Email',
 						value: 'hello@veent.app',
-						color: 'from-indigo-500 to-blue-600'
+						color: 'from-red-500 to-red-600'
 					},
 					{
 						icon: 'M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z M15 11a3 3 0 11-6 0 3 3 0 016 0z',
 						label: 'Location',
 						value: 'Philippines',
-						color: 'from-violet-500 to-purple-600'
+						color: 'from-red-500 to-red-600'
 					},
 					{
 						icon: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z',
 						label: 'Hours',
 						value: 'Mon–Fri, 9 AM – 6 PM',
-						color: 'from-emerald-500 to-teal-600'
+						color: 'from-red-500 to-red-600'
 					}
 				] as info}
 					<div class="group rounded-2xl border border-gray-100 bg-white p-6 shadow-sm transition-all hover:shadow-md">
@@ -143,9 +143,9 @@
 				{/each}
 
 				<!-- Extra CTA card -->
-				<div class="rounded-2xl bg-gradient-to-br from-indigo-600 to-purple-600 p-6 text-white shadow-lg">
+				<div class="rounded-2xl bg-gradient-to-br from-red-600 to-red-600 p-6 text-white shadow-lg">
 					<h3 class="font-bold">Need quick help?</h3>
-					<p class="mt-2 text-sm leading-relaxed text-indigo-100">
+					<p class="mt-2 text-sm leading-relaxed text-red-100">
 						Check out our Ticket Generator tool — no sign-up needed.
 					</p>
 					<a

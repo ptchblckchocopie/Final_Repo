@@ -223,7 +223,7 @@
 <svelte:window onkeydown={handleKeydown} />
 
 <svelte:head>
-	<title>Events - Veent</title>
+	<title>Events - Veent Tix</title>
 </svelte:head>
 
 <div class="dark min-h-screen bg-[#060a14] text-white">
@@ -237,7 +237,7 @@
 	<section class="relative overflow-hidden pt-24 pb-12">
 		<div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 			<div class="mx-auto max-w-3xl text-center fade-slide-up">
-				<p class="mb-4 text-sm font-semibold uppercase tracking-wider text-indigo-400">Discover</p>
+				<p class="mb-4 text-sm font-semibold uppercase tracking-wider text-red-400">Discover</p>
 				<h1 class="gradient-text text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl">
 					Events
 				</h1>
@@ -262,7 +262,7 @@
 						placeholder="Search events..."
 						bind:value={searchInput}
 						oninput={handleSearch}
-						class="w-full rounded-xl border border-white/[0.08] bg-white/[0.04] py-2.5 pr-4 pl-10 text-sm text-white placeholder-gray-500 transition-all focus:border-indigo-500/50 focus:bg-white/[0.06] focus:ring-2 focus:ring-indigo-500/20 focus:outline-none"
+						class="w-full rounded-xl border border-white/[0.08] bg-white/[0.04] py-2.5 pr-4 pl-10 text-sm text-white placeholder-gray-500 transition-all focus:border-red-500/50 focus:bg-white/[0.06] focus:ring-2 focus:ring-red-500/20 focus:outline-none"
 					/>
 				</div>
 
@@ -272,7 +272,7 @@
 						<button
 							onclick={() => setSort('nearest')}
 							class="rounded-lg px-3.5 py-1.5 text-xs font-medium transition-all {activeSort === 'nearest'
-								? 'bg-indigo-500/20 text-indigo-300 shadow-sm'
+								? 'bg-red-500/20 text-red-300 shadow-sm'
 								: 'text-gray-400 hover:text-white'}"
 						>
 							Nearest
@@ -280,7 +280,7 @@
 						<button
 							onclick={() => setSort('farthest')}
 							class="rounded-lg px-3.5 py-1.5 text-xs font-medium transition-all {activeSort === 'farthest'
-								? 'bg-indigo-500/20 text-indigo-300 shadow-sm'
+								? 'bg-red-500/20 text-red-300 shadow-sm'
 								: 'text-gray-400 hover:text-white'}"
 						>
 							Farthest
@@ -290,7 +290,7 @@
 					<!-- Create Event Button -->
 					<button
 						onclick={openModal}
-						class="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-600/25 transition-all hover:shadow-xl hover:shadow-indigo-600/30 hover:brightness-110"
+						class="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-red-600 to-red-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-red-600/25 transition-all hover:shadow-xl hover:shadow-red-600/30 hover:brightness-110"
 					>
 						<svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
 							<path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
@@ -309,7 +309,7 @@
 				{#each data.event as event, i}
 					<a
 						href="/event/{event.slug}"
-						class="event-card glass-card group block overflow-hidden rounded-2xl transition-all duration-300 hover:-translate-y-1 hover:border-white/[0.15] hover:shadow-2xl hover:shadow-indigo-500/10 no-underline"
+						class="event-card glass-card group block overflow-hidden rounded-2xl transition-all duration-300 hover:-translate-y-1 hover:border-white/[0.15] hover:shadow-2xl hover:shadow-red-500/10 no-underline"
 						style="animation-delay: {0.15 + i * 0.06}s;"
 					>
 						<!-- Poster Image -->
@@ -322,7 +322,7 @@
 								/>
 								<div class="absolute inset-0 bg-gradient-to-t from-[#060a14] via-transparent to-transparent"></div>
 							{:else}
-								<div class="flex h-full w-full items-center justify-center bg-gradient-to-br from-indigo-600/20 via-violet-600/15 to-purple-600/20">
+								<div class="flex h-full w-full items-center justify-center bg-gradient-to-br from-red-600/20 via-red-600/15 to-red-600/20">
 									<svg class="h-12 w-12 text-white/20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1">
 										<path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
 									</svg>
@@ -333,12 +333,12 @@
 
 						<!-- Card Content -->
 						<div class="p-5">
-							<h3 class="text-lg font-bold text-white transition-colors group-hover:text-indigo-300">
+							<h3 class="text-lg font-bold text-white transition-colors group-hover:text-red-300">
 								{event.title}
 							</h3>
 							{#if event.event_date}
 								<div class="mt-3 flex items-center gap-2 text-sm text-gray-400">
-									<svg class="h-4 w-4 text-indigo-400/70" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+									<svg class="h-4 w-4 text-red-400/70" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
 										<path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
 									</svg>
 									{formatDate(event.event_date)}
@@ -356,14 +356,14 @@
 		{:else}
 			<!-- Empty State -->
 			<div class="glass-card mx-auto max-w-md rounded-2xl p-16 text-center fade-slide-up" style="animation-delay: 0.2s;">
-				<div class="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-indigo-500/10">
-					<svg class="h-8 w-8 text-indigo-400/60" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+				<div class="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-red-500/10">
+					<svg class="h-8 w-8 text-red-400/60" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
 						<path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
 					</svg>
 				</div>
 				<p class="mt-6 text-gray-400">
 					{#if data.search}
-						No events match "<span class="text-indigo-400">{data.search}</span>"
+						No events match "<span class="text-red-400">{data.search}</span>"
 					{:else}
 						No events yet
 					{/if}
@@ -376,7 +376,7 @@
 <!-- Toast Notification -->
 {#if toast}
 	<div class="fixed bottom-6 right-6 z-[60] toast-enter">
-		<div class="flex items-center gap-3 rounded-xl px-5 py-3 shadow-xl {toast.type === 'success' ? 'bg-emerald-600' : 'bg-red-600'}">
+		<div class="flex items-center gap-3 rounded-xl px-5 py-3 shadow-xl {toast.type === 'success' ? 'bg-red-600' : 'bg-red-600'}">
 			{#if toast.type === 'success'}
 				<svg class="h-5 w-5 text-white shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
 					<path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
@@ -430,7 +430,7 @@
 
 			<!-- Section 1: Event Details -->
 			<div class="space-y-4">
-				<h3 class="text-sm font-semibold uppercase tracking-wider text-indigo-400">Event Details</h3>
+				<h3 class="text-sm font-semibold uppercase tracking-wider text-red-400">Event Details</h3>
 
 				<!-- Title -->
 				<div>
@@ -530,7 +530,7 @@
 
 			<!-- Section 2: Event Media -->
 			<div class="mt-6 space-y-4">
-				<h3 class="text-sm font-semibold uppercase tracking-wider text-indigo-400">Event Media</h3>
+				<h3 class="text-sm font-semibold uppercase tracking-wider text-red-400">Event Media</h3>
 
 				<div class="grid grid-cols-3 gap-3">
 					<!-- Company Logo Upload -->
@@ -634,7 +634,7 @@
 				<button
 					onclick={handleSubmit}
 					disabled={submitting}
-					class="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-600/25 transition-all hover:shadow-xl hover:shadow-indigo-600/30 hover:brightness-110 disabled:opacity-50 disabled:cursor-not-allowed"
+					class="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-red-600 to-red-600 px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-red-600/25 transition-all hover:shadow-xl hover:shadow-red-600/30 hover:brightness-110 disabled:opacity-50 disabled:cursor-not-allowed"
 				>
 					{#if submitting}
 						<svg class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">

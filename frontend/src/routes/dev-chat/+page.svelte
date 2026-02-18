@@ -34,7 +34,7 @@
 	let newMessage = $state('');
 	let loading = $state(true);
 	let messageContainer = $state<HTMLDivElement>(undefined!);
-	let showDrawBoard = $state(true);
+	let showDrawBoard = $state(false);
 
 	let wsStatus = $derived(getConnectionStatus());
 	let wsOnlineUsers = $derived(getOnlineUsers());
@@ -165,7 +165,7 @@
 </script>
 
 <svelte:head>
-	<title>Dev Chat - Veent</title>
+	<title>Dev Chat - Veent Tix</title>
 </svelte:head>
 
 <div class:dark={isDark}>
@@ -173,11 +173,11 @@
 	<!-- USERNAME ENTRY SCREEN -->
 	<section class="relative overflow-hidden bg-slate-900 py-24 text-white">
 		<div
-			class="absolute inset-0 bg-gradient-to-br from-indigo-600/15 via-transparent to-purple-600/10"
+			class="absolute inset-0 bg-gradient-to-br from-red-600/15 via-transparent to-red-600/10"
 		></div>
 		<div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 			<div class="mx-auto max-w-3xl text-center">
-				<p class="mb-4 text-sm font-semibold uppercase tracking-wider text-indigo-400">
+				<p class="mb-4 text-sm font-semibold uppercase tracking-wider text-red-400">
 					Community
 				</p>
 				<h1 class="text-4xl font-extrabold tracking-tight sm:text-5xl">Dev Chat</h1>
@@ -197,7 +197,7 @@
 				</div>
 
 				<div
-					class="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 shadow-lg shadow-indigo-500/25"
+					class="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-red-500 to-red-600 shadow-lg shadow-red-500/25"
 				>
 					<svg
 						class="h-8 w-8 text-white"
@@ -229,12 +229,12 @@
 						bind:value={usernameInput}
 						required
 						maxlength={50}
-						class="w-full rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-4 py-3 text-gray-900 dark:text-gray-100 transition-all focus:border-indigo-500 focus:bg-white dark:focus:bg-gray-600 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none"
+						class="w-full rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-4 py-3 text-gray-900 dark:text-gray-100 transition-all focus:border-red-500 focus:bg-white dark:focus:bg-gray-600 focus:ring-2 focus:ring-red-500/20 focus:outline-none"
 						placeholder="Enter your name"
 					/>
 					<button
 						type="submit"
-						class="group mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-indigo-500 px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-indigo-600/25 transition-all hover:shadow-xl hover:shadow-indigo-600/30 hover:brightness-110"
+						class="group mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-red-600 to-red-500 px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-red-600/25 transition-all hover:shadow-xl hover:shadow-red-600/30 hover:brightness-110"
 					>
 						Join Chat
 						<svg
@@ -265,7 +265,7 @@
 				<div class="mx-auto flex items-center justify-between">
 					<div class="flex items-center gap-3">
 						<div
-							class="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 shadow-md"
+							class="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-red-500 to-red-600 shadow-md"
 						>
 							<svg
 								class="h-5 w-5 text-white"
@@ -286,15 +286,15 @@
 								<h1 class="text-lg font-bold text-gray-900 dark:text-gray-100">Dev Chat</h1>
 								<span
 									class="inline-block h-2.5 w-2.5 rounded-full {wsStatus === 'connected'
-										? 'bg-green-500'
+										? 'bg-red-500'
 										: wsStatus === 'connecting'
-											? 'bg-yellow-400 animate-pulse'
+											? 'bg-red-400 animate-pulse'
 											: 'bg-red-500'}"
 									title={wsStatus}
 								></span>
 							</div>
 							<p class="text-xs text-gray-500 dark:text-gray-400">
-								Logged in as <span class="font-semibold text-indigo-600 dark:text-indigo-400">{username}</span>
+								Logged in as <span class="font-semibold text-red-600 dark:text-red-400">{username}</span>
 								{#if wsOnlineUsers.length > 0}
 									<span class="ml-1">&middot; {wsOnlineUsers.length} online</span>
 								{/if}
@@ -308,7 +308,7 @@
 							<button
 								onclick={() => (showDrawBoard = !showDrawBoard)}
 								class="cursor-pointer rounded-lg px-3 py-1.5 text-sm font-medium transition-colors {showDrawBoard
-									? 'bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300'
+									? 'bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300'
 									: 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'}"
 								title="{showDrawBoard ? 'Hide' : 'Show'} drawing board"
 							>
@@ -318,7 +318,7 @@
 							</button>
 							<button
 								onclick={openCallDialog}
-								class="cursor-pointer rounded-lg bg-green-500 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-green-600"
+								class="cursor-pointer rounded-lg bg-red-500 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-red-600"
 							>
 								Call
 							</button>
@@ -337,10 +337,10 @@
 								Cancel
 							</button>
 						{:else if currentCallState === 'active'}
-							<span class="text-sm font-medium text-green-600 dark:text-green-400">In call with {currentRemoteUser}</span>
+							<span class="text-sm font-medium text-red-600 dark:text-red-400">In call with {currentRemoteUser}</span>
 							<button
 								onclick={toggleMute}
-								class="cursor-pointer rounded-lg px-3 py-1.5 text-sm font-medium transition-colors {currentIsMuted ? 'bg-yellow-100 dark:bg-yellow-900/40 text-yellow-700 dark:text-yellow-300 hover:bg-yellow-200 dark:hover:bg-yellow-900/60' : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600'}"
+								class="cursor-pointer rounded-lg px-3 py-1.5 text-sm font-medium transition-colors {currentIsMuted ? 'bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300 hover:bg-red-200 dark:hover:bg-red-900/60' : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600'}"
 							>
 								{currentIsMuted ? 'Unmute' : 'Mute'}
 							</button>
@@ -361,7 +361,7 @@
 					{#if loading}
 						<div class="flex justify-center py-12">
 							<div
-								class="h-10 w-10 animate-spin rounded-full border-4 border-indigo-200 dark:border-indigo-800 border-t-indigo-600"
+								class="h-10 w-10 animate-spin rounded-full border-4 border-red-200 dark:border-red-800 border-t-red-600"
 							></div>
 						</div>
 					{:else if messages.length === 0}
@@ -395,7 +395,7 @@
 									{/if}
 									<div
 										class="rounded-2xl px-4 py-3 shadow-sm {isOwn
-											? 'bg-gradient-to-r from-indigo-600 to-indigo-500 text-white'
+											? 'bg-gradient-to-r from-red-600 to-red-500 text-white'
 											: 'border border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100'}"
 									>
 										<p class="whitespace-pre-wrap text-sm leading-relaxed">
@@ -424,12 +424,12 @@
 						bind:value={newMessage}
 						placeholder="Type a message..."
 						maxlength={1000}
-						class="flex-1 rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-4 py-3 text-gray-900 dark:text-gray-100 transition-all focus:border-indigo-500 focus:bg-white dark:focus:bg-gray-600 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none"
+						class="flex-1 rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-4 py-3 text-gray-900 dark:text-gray-100 transition-all focus:border-red-500 focus:bg-white dark:focus:bg-gray-600 focus:ring-2 focus:ring-red-500/20 focus:outline-none"
 					/>
 					<button
 						type="submit"
 						disabled={wsStatus !== 'connected' || !newMessage.trim()}
-						class="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-indigo-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-600/25 transition-all hover:shadow-xl hover:shadow-indigo-600/30 hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50"
+						class="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-red-600 to-red-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-red-600/25 transition-all hover:shadow-xl hover:shadow-red-600/30 hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50"
 					>
 						<svg
 							class="h-4 w-4"
@@ -484,7 +484,7 @@
 						bind:value={callTargetInput}
 						required
 						maxlength={50}
-						class="w-full rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-4 py-3 text-gray-900 dark:text-gray-100 transition-all focus:border-indigo-500 focus:bg-white dark:focus:bg-gray-600 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none"
+						class="w-full rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-4 py-3 text-gray-900 dark:text-gray-100 transition-all focus:border-red-500 focus:bg-white dark:focus:bg-gray-600 focus:ring-2 focus:ring-red-500/20 focus:outline-none"
 						placeholder="Username to call"
 					/>
 					<div class="mt-4 flex gap-3">
@@ -498,7 +498,7 @@
 						<button
 							type="submit"
 							disabled={!callTargetInput.trim()}
-							class="flex-1 cursor-pointer rounded-xl bg-green-500 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-green-600 disabled:cursor-not-allowed disabled:opacity-50"
+							class="flex-1 cursor-pointer rounded-xl bg-red-500 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-red-600 disabled:cursor-not-allowed disabled:opacity-50"
 						>
 							Call
 						</button>
@@ -512,14 +512,14 @@
 	{#if currentCallState === 'incoming' && currentIncomingSignal}
 		<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
 			<div class="mx-4 w-full max-w-sm rounded-2xl bg-white dark:bg-gray-800 p-6 text-center shadow-xl">
-				<div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/40">
-					<svg class="h-8 w-8 text-green-600 dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+				<div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/40">
+					<svg class="h-8 w-8 text-red-600 dark:text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
 						<path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
 					</svg>
 				</div>
 				<h3 class="text-lg font-bold text-gray-900 dark:text-gray-100">Incoming Call</h3>
 				<p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
-					<span class="font-semibold text-indigo-600 dark:text-indigo-400">{currentRemoteUser}</span> is calling you
+					<span class="font-semibold text-red-600 dark:text-red-400">{currentRemoteUser}</span> is calling you
 				</p>
 				<div class="mt-6 flex gap-3">
 					<button
@@ -530,7 +530,7 @@
 					</button>
 					<button
 						onclick={acceptCall}
-						class="flex-1 cursor-pointer rounded-xl bg-green-500 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-green-600"
+						class="flex-1 cursor-pointer rounded-xl bg-red-500 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-red-600"
 					>
 						Accept
 					</button>

@@ -112,7 +112,7 @@
 		{/if}
 
 		<!-- Drop zone indicator -->
-		<div class="drop-indicator pointer-events-none absolute inset-0 hidden border-2 border-dashed border-indigo-400 bg-indigo-50/20"></div>
+		<div class="drop-indicator pointer-events-none absolute inset-0 hidden border-2 border-dashed border-red-400 bg-red-50/20"></div>
 
 		<!-- Elements -->
 		{#each elements as el (el.id)}

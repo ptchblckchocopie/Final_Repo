@@ -76,7 +76,7 @@
 			<button
 				onclick={addCode}
 				disabled={!selectedColumn}
-				class="w-full cursor-pointer rounded bg-indigo-600 px-3 py-2 text-xs font-medium text-white transition-colors hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-40"
+				class="w-full cursor-pointer rounded bg-red-600 px-3 py-2 text-xs font-medium text-white transition-colors hover:bg-red-500 disabled:cursor-not-allowed disabled:opacity-40"
 			>
 				Add {codeType === 'qr' ? 'QR Code' : 'Barcode'}
 			</button>

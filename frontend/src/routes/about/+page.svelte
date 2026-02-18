@@ -3,16 +3,16 @@
 </script>
 
 <svelte:head>
-	<title>About - Veent</title>
+	<title>About - Veent Tix</title>
 </svelte:head>
 
 <!-- Hero Header -->
 <section class="relative overflow-hidden bg-slate-900 py-24 text-white">
-	<div class="absolute inset-0 bg-gradient-to-br from-indigo-600/15 via-transparent to-purple-600/10"></div>
+	<div class="absolute inset-0 bg-gradient-to-br from-red-600/15 via-transparent to-red-600/10"></div>
 	<div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 		<div class="mx-auto max-w-3xl text-center">
-			<p class="mb-4 text-sm font-semibold uppercase tracking-wider text-indigo-400">Who we are</p>
-			<h1 class="text-4xl font-extrabold tracking-tight sm:text-5xl">About Veent</h1>
+			<p class="mb-4 text-sm font-semibold uppercase tracking-wider text-red-400">Who we are</p>
+			<h1 class="text-4xl font-extrabold tracking-tight sm:text-5xl">About Veent Tix</h1>
 			<p class="mt-6 text-lg leading-relaxed text-gray-400">
 				Professional event ticketing tools built for speed and simplicity.
 			</p>
@@ -24,7 +24,7 @@
 <section class="bg-white py-20">
 	<div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
 		<div class="mb-12 text-center">
-			<p class="text-sm font-semibold uppercase tracking-wider text-indigo-600">Updates</p>
+			<p class="text-sm font-semibold uppercase tracking-wider text-red-600">Updates</p>
 			<h2 class="mt-3 text-3xl font-bold text-gray-900 sm:text-4xl">Latest Posts</h2>
 		</div>
 
@@ -32,9 +32,9 @@
 			<div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
 				{#each data.posts as post}
 					<article class="group overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
-						<div class="h-2 bg-gradient-to-r from-indigo-500 to-purple-500"></div>
+						<div class="h-2 bg-gradient-to-r from-red-500 to-red-500"></div>
 						<div class="p-6">
-							<h3 class="text-lg font-bold text-gray-900 group-hover:text-indigo-600 transition-colors">{post.title}</h3>
+							<h3 class="text-lg font-bold text-gray-900 group-hover:text-red-600 transition-colors">{post.title}</h3>
 							<p class="mt-3 line-clamp-3 text-sm leading-relaxed text-gray-500">{post.content}</p>
 						</div>
 					</article>

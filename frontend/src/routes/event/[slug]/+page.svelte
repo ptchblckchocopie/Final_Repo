@@ -193,7 +193,7 @@
 <svelte:window onkeydown={handleTicketKeydown} />
 
 <svelte:head>
-	<title>{event.title} - Veent</title>
+	<title>{event.title} - Veent Tix</title>
 </svelte:head>
 
 <div class="dark min-h-screen bg-[#060a14] text-white">
@@ -207,7 +207,7 @@
 	<div class="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 pt-8">
 		<a
 			href="/event"
-			class="inline-flex items-center gap-2 text-sm text-gray-400 transition-colors hover:text-indigo-300"
+			class="inline-flex items-center gap-2 text-sm text-gray-400 transition-colors hover:text-red-300"
 		>
 			<svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
 				<path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
@@ -231,7 +231,7 @@
 							class="w-full aspect-[4/5] object-cover"
 						/>
 					{:else}
-						<div class="flex w-full aspect-[4/5] items-center justify-center bg-gradient-to-br from-indigo-600/20 via-violet-600/15 to-purple-600/20">
+						<div class="flex w-full aspect-[4/5] items-center justify-center bg-gradient-to-br from-red-600/20 via-red-600/15 to-red-600/20">
 							<svg class="h-20 w-20 text-white/10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1">
 								<path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z" />
 							</svg>
@@ -242,9 +242,9 @@
 				<!-- Countdown -->
 				<div class="glass-card rounded-2xl p-5">
 					{#if eventStarted}
-						<p class="text-sm font-semibold uppercase tracking-wider text-emerald-400 text-center">Event has started</p>
+						<p class="text-sm font-semibold uppercase tracking-wider text-red-400 text-center">Event has started</p>
 					{:else}
-						<p class="text-sm font-semibold uppercase tracking-wider text-indigo-400 text-center mb-4">Event Starts In</p>
+						<p class="text-sm font-semibold uppercase tracking-wider text-red-400 text-center mb-4">Event Starts In</p>
 						<div class="grid grid-cols-4 gap-3">
 							<div class="countdown-unit">
 								<span class="countdown-value">{pad(days)}</span>
@@ -269,7 +269,7 @@
 				<!-- Description -->
 				{#if event.content}
 					<div class="glass-card rounded-2xl p-6">
-						<h2 class="text-sm font-semibold uppercase tracking-wider text-indigo-400 mb-3">Description</h2>
+						<h2 class="text-sm font-semibold uppercase tracking-wider text-red-400 mb-3">Description</h2>
 						<p class="text-gray-300 leading-relaxed whitespace-pre-line">{event.content}</p>
 					</div>
 				{/if}
@@ -293,21 +293,21 @@
 
 				<!-- Event Duration -->
 				<div class="glass-card rounded-2xl p-6">
-					<h2 class="text-sm font-semibold uppercase tracking-wider text-indigo-400 mb-4">Event Duration</h2>
+					<h2 class="text-sm font-semibold uppercase tracking-wider text-red-400 mb-4">Event Duration</h2>
 
 					<div class="space-y-4">
 						<!-- Start -->
 						{#if event.event_date}
 							<div class="flex items-center gap-4">
-								<div class="flex h-11 w-11 items-center justify-center rounded-xl bg-indigo-500/10 shrink-0">
-									<svg class="h-5 w-5 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+								<div class="flex h-11 w-11 items-center justify-center rounded-xl bg-red-500/10 shrink-0">
+									<svg class="h-5 w-5 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
 										<path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
 									</svg>
 								</div>
 								<div>
 									<p class="text-xs text-gray-500">Starts</p>
 									<p class="text-sm font-medium text-gray-200">
-										{formatDate(event.event_date)}{#if event.start_time}{' '}<span class="text-indigo-300">at {formatTime(event.start_time)}</span>{/if}
+										{formatDate(event.event_date)}{#if event.start_time}{' '}<span class="text-red-300">at {formatTime(event.start_time)}</span>{/if}
 									</p>
 								</div>
 							</div>
@@ -316,15 +316,15 @@
 						<!-- End -->
 						{#if event.end_date || event.end_time}
 							<div class="flex items-center gap-4">
-								<div class="flex h-11 w-11 items-center justify-center rounded-xl bg-violet-500/10 shrink-0">
-									<svg class="h-5 w-5 text-violet-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+								<div class="flex h-11 w-11 items-center justify-center rounded-xl bg-red-500/10 shrink-0">
+									<svg class="h-5 w-5 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
 										<path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
 									</svg>
 								</div>
 								<div>
 									<p class="text-xs text-gray-500">Ends</p>
 									<p class="text-sm font-medium text-gray-200">
-										{#if event.end_date}{formatDate(event.end_date)}{/if}{#if event.end_time}{' '}<span class="text-violet-300">at {formatTime(event.end_time)}</span>{/if}
+										{#if event.end_date}{formatDate(event.end_date)}{/if}{#if event.end_time}{' '}<span class="text-red-300">at {formatTime(event.end_time)}</span>{/if}
 									</p>
 								</div>
 							</div>
@@ -335,10 +335,10 @@
 				<!-- Location -->
 				{#if event.location}
 					<div class="glass-card rounded-2xl p-6">
-						<h2 class="text-sm font-semibold uppercase tracking-wider text-indigo-400 mb-4">Place</h2>
+						<h2 class="text-sm font-semibold uppercase tracking-wider text-red-400 mb-4">Place</h2>
 						<div class="flex items-center gap-4">
-							<div class="flex h-11 w-11 items-center justify-center rounded-xl bg-violet-500/10 shrink-0">
-								<svg class="h-5 w-5 text-violet-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+							<div class="flex h-11 w-11 items-center justify-center rounded-xl bg-red-500/10 shrink-0">
+								<svg class="h-5 w-5 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
 									<path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
 									<path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
 								</svg>
@@ -351,10 +351,10 @@
 				<!-- Ticket Info -->
 				<div class="glass-card rounded-2xl p-6">
 					<div class="flex items-center justify-between mb-4">
-						<h2 class="text-sm font-semibold uppercase tracking-wider text-indigo-400">Ticket Info</h2>
+						<h2 class="text-sm font-semibold uppercase tracking-wider text-red-400">Ticket Info</h2>
 						<button
 							onclick={openTicketModal}
-							class="inline-flex items-center gap-1.5 rounded-lg bg-indigo-500/15 px-3 py-1.5 text-xs font-semibold text-indigo-300 transition-all hover:bg-indigo-500/25"
+							class="inline-flex items-center gap-1.5 rounded-lg bg-red-500/15 px-3 py-1.5 text-xs font-semibold text-red-300 transition-all hover:bg-red-500/25"
 						>
 							<svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
 								<path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
@@ -402,7 +402,7 @@
 <!-- Toast Notification -->
 {#if toast}
 	<div class="fixed bottom-6 right-6 z-[60] toast-enter">
-		<div class="flex items-center gap-3 rounded-xl px-5 py-3 shadow-xl {toast.type === 'success' ? 'bg-emerald-600' : 'bg-red-600'}">
+		<div class="flex items-center gap-3 rounded-xl px-5 py-3 shadow-xl {toast.type === 'success' ? 'bg-red-600' : 'bg-red-600'}">
 			{#if toast.type === 'success'}
 				<svg class="h-5 w-5 text-white shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
 					<path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
@@ -516,7 +516,7 @@
 				<button
 					onclick={handleAddTicket}
 					disabled={ticketSubmitting}
-					class="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-600/25 transition-all hover:shadow-xl hover:shadow-indigo-600/30 hover:brightness-110 disabled:opacity-50 disabled:cursor-not-allowed"
+					class="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-red-600 to-red-600 px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-red-600/25 transition-all hover:shadow-xl hover:shadow-red-600/30 hover:brightness-110 disabled:opacity-50 disabled:cursor-not-allowed"
 				>
 					{#if ticketSubmitting}
 						<svg class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">

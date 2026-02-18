@@ -236,7 +236,7 @@
 		<button
 			onclick={() => (tool = 'pen')}
 			class="rounded-lg px-2 py-1.5 text-xs font-medium transition-colors {tool === 'pen'
-				? 'bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300'
+				? 'bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300'
 				: 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'}"
 			title="Pen"
 		>
@@ -247,7 +247,7 @@
 		<button
 			onclick={() => (tool = 'eraser')}
 			class="rounded-lg px-2 py-1.5 text-xs font-medium transition-colors {tool === 'eraser'
-				? 'bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300'
+				? 'bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300'
 				: 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'}"
 			title="Eraser"
 		>
@@ -264,7 +264,7 @@
 				<button
 					onclick={() => { color = c; tool = 'pen'; }}
 					class="h-5 w-5 rounded-full border-2 transition-transform hover:scale-110 {color === c && tool === 'pen'
-						? 'border-indigo-500 scale-110'
+						? 'border-red-500 scale-110'
 						: 'border-gray-300 dark:border-gray-600'}"
 					style="background-color: {c};"
 					title={c}
@@ -287,7 +287,7 @@
 			min="1"
 			max="20"
 			bind:value={brushWidth}
-			class="w-16 accent-indigo-500"
+			class="w-16 accent-red-500"
 			title="Brush size: {brushWidth}"
 		/>
 		<span class="text-xs text-gray-500 dark:text-gray-400 min-w-[1.5rem] text-center">{brushWidth}</span>

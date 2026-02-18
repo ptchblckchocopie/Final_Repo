@@ -62,7 +62,7 @@
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <div
 	bind:this={nodeEl}
-	class="absolute cursor-move select-none {selected ? 'ring-2 ring-indigo-500' : ''} {element.containInBox && !element.allowOverflow ? 'overflow-hidden' : ''}"
+	class="absolute cursor-move select-none {selected ? 'ring-2 ring-red-500' : ''} {element.containInBox && !element.allowOverflow ? 'overflow-hidden' : ''}"
 	style="
 		left: {element.position.x}px;
 		top: {element.position.y}px;
@@ -99,7 +99,7 @@
 	{#if selected}
 		<!-- Resize Handle -->
 		<div
-			class="resize-handle absolute -right-1.5 -bottom-1.5 z-10 h-3 w-3 cursor-se-resize rounded-sm bg-indigo-600"
+			class="resize-handle absolute -right-1.5 -bottom-1.5 z-10 h-3 w-3 cursor-se-resize rounded-sm bg-red-600"
 			use:resizable={{
 				zoom,
 				getElementId: () => element.id,
@@ -111,7 +111,7 @@
 
 		<!-- Rotate Handle -->
 		<div
-			class="rotate-handle absolute -top-6 left-1/2 z-10 h-4 w-4 -translate-x-1/2 cursor-grab rounded-full border-2 border-indigo-600 bg-white"
+			class="rotate-handle absolute -top-6 left-1/2 z-10 h-4 w-4 -translate-x-1/2 cursor-grab rounded-full border-2 border-red-600 bg-white"
 			use:rotatable={{
 				getElementId: () => element.id,
 				getCenter,
@@ -119,6 +119,6 @@
 				onRotateEnd: handleRotateEnd
 			}}
 		></div>
-		<div class="pointer-events-none absolute -top-3 left-1/2 h-3 w-px -translate-x-1/2 bg-indigo-600"></div>
+		<div class="pointer-events-none absolute -top-3 left-1/2 h-3 w-px -translate-x-1/2 bg-red-600"></div>
 	{/if}
 </div>

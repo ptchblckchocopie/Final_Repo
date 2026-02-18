@@ -14,7 +14,7 @@
 	const { children }: Props = $props();
 
 	const hideFooter = $derived(
-		$page.url.pathname === '/ticket-generator' || $page.url.pathname === '/dev-chat'
+		$page.url.pathname === '/ticket-generator' || $page.url.pathname === '/dev-chat' || $page.url.pathname === '/snake-game'
 	);
 </script>
 

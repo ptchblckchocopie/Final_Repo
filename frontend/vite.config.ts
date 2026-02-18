@@ -11,10 +11,15 @@ export default defineConfig({
 		setupFiles: ['src/test-setup.ts']
 	},
 	server: {
+		allowedHosts: ['.ngrok-free.dev'],
 		proxy: {
 			'/api': {
 				target: 'http://localhost:3000',
 				changeOrigin: true
+			},
+			'/ws/snake': {
+				target: 'ws://localhost:3001',
+				ws: true
 			},
 			'/ws': {
 				target: 'ws://localhost:3001',

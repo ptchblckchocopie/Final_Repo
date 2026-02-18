@@ -8,8 +8,8 @@
 			<!-- Brand -->
 			<div>
 				<a href="/" class="flex items-center gap-2.5">
-					<span class="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 text-xs font-extrabold text-white">V</span>
-					<span class="text-lg font-bold text-white">Veent</span>
+					<span class="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-red-500 to-red-600 text-xs font-extrabold text-white">V</span>
+					<span class="text-lg font-bold text-white">Veent Tix</span>
 				</a>
 				<p class="mt-3 text-sm leading-relaxed text-gray-500">
 					Professional event ticketing tools. Design, generate, and export tickets with ease.
@@ -37,7 +37,7 @@
 		</div>
 
 		<div class="mt-10 border-t border-white/10 pt-6">
-			<p class="text-center text-xs text-gray-600">&copy; {year} Veent. All rights reserved.</p>
+			<p class="text-center text-xs text-gray-600">&copy; {year} Veent Tix. All rights reserved.</p>
 		</div>
 	</div>
 </footer>

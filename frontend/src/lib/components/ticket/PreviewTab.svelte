@@ -191,11 +191,11 @@
 			<div class="flex rounded border border-gray-300 dark:border-gray-600">
 				<button
 					onclick={() => (viewMode = 'pages')}
-					class="cursor-pointer px-3 py-1 text-xs font-medium {viewMode === 'pages' ? 'bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300' : 'text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700'}"
+					class="cursor-pointer px-3 py-1 text-xs font-medium {viewMode === 'pages' ? 'bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300' : 'text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700'}"
 				>Pages</button>
 				<button
 					onclick={() => (viewMode = 'grid')}
-					class="cursor-pointer px-3 py-1 text-xs font-medium {viewMode === 'grid' ? 'bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300' : 'text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700'}"
+					class="cursor-pointer px-3 py-1 text-xs font-medium {viewMode === 'grid' ? 'bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300' : 'text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700'}"
 				>Grid</button>
 			</div>
 		{/if}
@@ -204,12 +204,12 @@
 			<div class="flex flex-wrap gap-1">
 				<button
 					onclick={() => (filterLabel = 'all')}
-					class="cursor-pointer rounded-full px-3 py-1 text-xs font-medium {filterLabel === 'all' ? 'bg-indigo-600 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'}"
+					class="cursor-pointer rounded-full px-3 py-1 text-xs font-medium {filterLabel === 'all' ? 'bg-red-600 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'}"
 				>All</button>
 				{#each uniqueLabels as label}
 					<button
 						onclick={() => (filterLabel = label)}
-						class="cursor-pointer rounded-full px-3 py-1 text-xs font-medium {filterLabel === label ? 'bg-indigo-600 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'}"
+						class="cursor-pointer rounded-full px-3 py-1 text-xs font-medium {filterLabel === label ? 'bg-red-600 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'}"
 					>{label}</button>
 				{/each}
 			</div>
@@ -219,14 +219,14 @@
 			<button
 				onclick={generatePreview}
 				disabled={generating}
-				class="cursor-pointer rounded-lg bg-indigo-600 px-4 py-2 text-xs font-medium text-white transition-colors hover:bg-indigo-500 disabled:opacity-50"
+				class="cursor-pointer rounded-lg bg-red-600 px-4 py-2 text-xs font-medium text-white transition-colors hover:bg-red-500 disabled:opacity-50"
 			>
 				{generating ? 'Generating...' : 'Generate Preview'}
 			</button>
 			{#if previewImages.length > 0}
 				<button
 					onclick={handlePrint}
-					class="cursor-pointer rounded-lg bg-emerald-600 px-4 py-2 text-xs font-medium text-white transition-colors hover:bg-emerald-500"
+					class="cursor-pointer rounded-lg bg-red-600 px-4 py-2 text-xs font-medium text-white transition-colors hover:bg-red-500"
 				>
 					Print
 				</button>
@@ -337,9 +337,9 @@
 <!-- Print Reminder Modal -->
 <Modal open={showPrintModal} title="Print Settings Reminder" onclose={() => (showPrintModal = false)}>
 	<div class="space-y-4">
-		<div class="rounded-lg border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-900/30 p-4">
-			<h4 class="mb-2 text-sm font-semibold text-amber-800 dark:text-amber-300">Important: Set margins to None</h4>
-			<p class="text-sm text-amber-700 dark:text-amber-400">
+		<div class="rounded-lg border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/30 p-4">
+			<h4 class="mb-2 text-sm font-semibold text-red-800 dark:text-red-300">Important: Set margins to None</h4>
+			<p class="text-sm text-red-700 dark:text-red-400">
 				For tickets to print at the correct size, you must set your printer margins to <strong>None</strong>
 				in the print dialog. The layout already includes 10mm margins.
 			</p>
@@ -360,7 +360,7 @@
 		</div>
 		<div class="flex justify-end gap-2">
 			<button onclick={() => (showPrintModal = false)} class="cursor-pointer rounded-lg px-4 py-2 text-sm text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700">Cancel</button>
-			<button onclick={doPrint} class="cursor-pointer rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-500">Continue to Print</button>
+			<button onclick={doPrint} class="cursor-pointer rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-500">Continue to Print</button>
 		</div>
 	</div>
 </Modal>

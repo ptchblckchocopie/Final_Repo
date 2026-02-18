@@ -38,7 +38,7 @@
 					class="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all
 					{active
 						? link.highlight
-							? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/20'
+							? 'bg-red-600 text-white shadow-lg shadow-red-600/20'
 							: 'bg-white/10 text-white'
 						: 'text-gray-400 hover:bg-white/5 hover:text-white'}"
 				>

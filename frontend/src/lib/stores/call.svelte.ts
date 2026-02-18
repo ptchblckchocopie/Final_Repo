@@ -4,6 +4,7 @@ import {
 	getNewCallSignals,
 	updateCallSignalStatus,
 } from '$lib/api/calls';
+import { startOutgoingRingtone, startIncomingRingtone, stopRingtone } from '$lib/utils/ringtone';
 import type { PayloadCallSignal } from '$lib/types/payload';
 
 type CallState = 'idle' | 'calling' | 'incoming' | 'active';
@@ -18,6 +19,7 @@ let callId = '';
 let offerSignalId: number | null = null;
 let peerConnection: RTCPeerConnection | null = null;
 let localStream: MediaStream | null = null;
+let remoteStream: MediaStream | null = null;
 let remoteAudioEl: HTMLAudioElement | null = null;
 let incomingPollTimer: ReturnType<typeof setInterval> | null = null;
 let signalingPollTimer: ReturnType<typeof setInterval> | null = null;
@@ -46,6 +48,9 @@ export function getIncomingSignal() {
 
 export function setRemoteAudioElement(el: HTMLAudioElement) {
 	remoteAudioEl = el;
+	if (remoteStream) {
+		remoteAudioEl.srcObject = remoteStream;
+	}
 }
 
 export function initCallSystem(username: string) {
@@ -73,6 +78,7 @@ async function pollForIncomingCalls() {
 			callId = offer.callId;
 			remoteUser = offer.from;
 			callState = 'incoming';
+			startIncomingRingtone();
 		}
 	} catch {
 		// silent fail
@@ -111,6 +117,7 @@ export async function startCall(targetUser: string) {
 
 		lastSignalTimestamp = new Date().toISOString();
 		startSignalingPoll();
+		startOutgoingRingtone();
 	} catch {
 		cleanup();
 	}
@@ -119,6 +126,7 @@ export async function startCall(targetUser: string) {
 export async function acceptCall() {
 	if (callState !== 'incoming' || !incomingSignal) return;
 
+	stopRingtone();
 	callState = 'active';
 
 	try {
@@ -234,8 +242,11 @@ function setupPeerConnectionHandlers() {
 	};
 
 	peerConnection.ontrack = (event) => {
-		if (remoteAudioEl && event.streams[0]) {
-			remoteAudioEl.srcObject = event.streams[0];
+		if (event.streams[0]) {
+			remoteStream = event.streams[0];
+			if (remoteAudioEl) {
+				remoteAudioEl.srcObject = remoteStream;
+			}
 		}
 	};
 
@@ -267,6 +278,7 @@ async function pollForSignals() {
 				await peerConnection.setRemoteDescription(
 					new RTCSessionDescription({ sdp: answerData.sdp, type: answerData.type })
 				);
+				stopRingtone();
 				callState = 'active';
 
 				// Flush any ICE candidates that arrived before the answer
@@ -306,6 +318,8 @@ async function pollForSignals() {
 }
 
 function cleanup() {
+	stopRingtone();
+
 	if (signalingPollTimer) {
 		clearInterval(signalingPollTimer);
 		signalingPollTimer = null;
@@ -324,6 +338,7 @@ function cleanup() {
 	if (remoteAudioEl) {
 		remoteAudioEl.srcObject = null;
 	}
+	remoteStream = null;
 
 	callState = 'idle';
 	remoteUser = '';

@@ -82,7 +82,7 @@
 					<button onclick={removeLogo} class="cursor-pointer rounded px-2 py-1 text-xs text-red-500 hover:bg-red-50 dark:hover:bg-red-900/30">Remove</button>
 				</div>
 			{:else}
-				<input id="qr-logo-upload" type="file" accept="image/*" onchange={handleLogoUpload} class="w-full text-xs file:mr-2 file:rounded file:border-0 file:bg-indigo-50 dark:file:bg-indigo-900/30 file:px-3 file:py-1.5 file:text-xs file:font-medium file:text-indigo-700 dark:file:text-indigo-300 file:cursor-pointer hover:file:bg-indigo-100 dark:hover:file:bg-indigo-900/50 dark:text-gray-300" />
+				<input id="qr-logo-upload" type="file" accept="image/*" onchange={handleLogoUpload} class="w-full text-xs file:mr-2 file:rounded file:border-0 file:bg-red-50 dark:file:bg-red-900/30 file:px-3 file:py-1.5 file:text-xs file:font-medium file:text-red-700 dark:file:text-red-300 file:cursor-pointer hover:file:bg-red-100 dark:hover:file:bg-red-900/50 dark:text-gray-300" />
 				<p class="mt-1 text-xs text-gray-400 dark:text-gray-500">Overlays a logo in the center of the QR code</p>
 			{/if}
 		</div>

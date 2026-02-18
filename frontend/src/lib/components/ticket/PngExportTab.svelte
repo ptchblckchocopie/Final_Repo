@@ -122,7 +122,7 @@
 			<button
 				onclick={handleExport}
 				disabled={exporting || csvData.length === 0}
-				class="cursor-pointer rounded-lg bg-indigo-600 px-4 py-2 text-xs font-medium text-white transition-colors hover:bg-indigo-500 disabled:opacity-50"
+				class="cursor-pointer rounded-lg bg-red-600 px-4 py-2 text-xs font-medium text-white transition-colors hover:bg-red-500 disabled:opacity-50"
 			>
 				Download ZIP ({csvData.length} tickets)
 			</button>

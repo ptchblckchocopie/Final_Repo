@@ -26,8 +26,8 @@
 		<p class="text-sm text-gray-600 dark:text-gray-300">
 			A previous session was found from <strong>{formatTime(savedAt)}</strong>. Would you like to restore it?
 		</p>
-		<div class="rounded-lg border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/30 p-3">
-			<p class="text-xs text-blue-700 dark:text-blue-300">
+		<div class="rounded-lg border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/30 p-3">
+			<p class="text-xs text-red-700 dark:text-red-300">
 				Restoring will load your previous elements, CSV data, background image, and settings.
 			</p>
 		</div>
@@ -40,7 +40,7 @@
 			</button>
 			<button
 				onclick={onrestore}
-				class="cursor-pointer rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-500"
+				class="cursor-pointer rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-500"
 			>
 				Restore
 			</button>

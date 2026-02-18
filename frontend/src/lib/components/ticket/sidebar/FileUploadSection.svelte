@@ -74,13 +74,13 @@
 		<!-- CSV Upload -->
 		<div>
 			<label for="csv-upload" class="mb-1 block text-xs font-medium text-gray-500 dark:text-gray-400">CSV Data</label>
-			<input id="csv-upload" type="file" accept=".csv" onchange={handleCSVFile} class="w-full text-xs file:mr-2 file:rounded file:border-0 file:bg-indigo-50 dark:file:bg-indigo-900/30 file:px-3 file:py-1.5 file:text-xs file:font-medium file:text-indigo-700 dark:file:text-indigo-300 file:cursor-pointer hover:file:bg-indigo-100 dark:hover:file:bg-indigo-900/50 dark:text-gray-300" />
+			<input id="csv-upload" type="file" accept=".csv" onchange={handleCSVFile} class="w-full text-xs file:mr-2 file:rounded file:border-0 file:bg-red-50 dark:file:bg-red-900/30 file:px-3 file:py-1.5 file:text-xs file:font-medium file:text-red-700 dark:file:text-red-300 file:cursor-pointer hover:file:bg-red-100 dark:hover:file:bg-red-900/50 dark:text-gray-300" />
 		</div>
 
 		<!-- Background Upload -->
 		<div>
 			<label for="bg-upload" class="mb-1 block text-xs font-medium text-gray-500 dark:text-gray-400">Background Image</label>
-			<input id="bg-upload" type="file" accept="image/*" onchange={handleBackgroundFile} class="w-full text-xs file:mr-2 file:rounded file:border-0 file:bg-indigo-50 dark:file:bg-indigo-900/30 file:px-3 file:py-1.5 file:text-xs file:font-medium file:text-indigo-700 dark:file:text-indigo-300 file:cursor-pointer hover:file:bg-indigo-100 dark:hover:file:bg-indigo-900/50 dark:text-gray-300" />
+			<input id="bg-upload" type="file" accept="image/*" onchange={handleBackgroundFile} class="w-full text-xs file:mr-2 file:rounded file:border-0 file:bg-red-50 dark:file:bg-red-900/30 file:px-3 file:py-1.5 file:text-xs file:font-medium file:text-red-700 dark:file:text-red-300 file:cursor-pointer hover:file:bg-red-100 dark:hover:file:bg-red-900/50 dark:text-gray-300" />
 			{#if hasBackground}
 				<div class="mt-2 flex items-center gap-2">
 					<select id="bg-fit-mode" value={fitMode} onchange={handleFitMode} class="flex-1 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 px-2 py-1 text-xs">

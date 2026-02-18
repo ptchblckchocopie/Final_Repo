@@ -213,14 +213,14 @@
 			<button
 				onclick={loadSelected}
 				disabled={!selectedTemplateId || isAnyBusy}
-				class="flex-1 cursor-pointer rounded bg-indigo-50 dark:bg-indigo-900/30 px-2 py-1.5 text-xs font-medium text-indigo-700 dark:text-indigo-300 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 disabled:opacity-40 disabled:cursor-not-allowed"
+				class="flex-1 cursor-pointer rounded bg-red-50 dark:bg-red-900/30 px-2 py-1.5 text-xs font-medium text-red-700 dark:text-red-300 hover:bg-red-100 dark:hover:bg-red-900/50 disabled:opacity-40 disabled:cursor-not-allowed"
 			>
 				{isLoadingTemplate ? 'Loading...' : 'Load'}
 			</button>
 			<button
 				onclick={saveAsCurrent}
 				disabled={isAnyBusy}
-				class="flex-1 cursor-pointer rounded bg-emerald-50 dark:bg-emerald-900/30 px-2 py-1.5 text-xs font-medium text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 disabled:opacity-40 disabled:cursor-not-allowed"
+				class="flex-1 cursor-pointer rounded bg-red-50 dark:bg-red-900/30 px-2 py-1.5 text-xs font-medium text-red-700 dark:text-red-300 hover:bg-red-100 dark:hover:bg-red-900/50 disabled:opacity-40 disabled:cursor-not-allowed"
 			>
 				{isSaving ? 'Saving...' : 'Save Current'}
 			</button>

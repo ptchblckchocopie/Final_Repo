@@ -219,7 +219,7 @@
 </script>
 
 <svelte:head>
-	<title>Event Calendar - Veent</title>
+	<title>Event Calendar - Veent Tix</title>
 </svelte:head>
 
 <!-- svelte-ignore a11y_no_static_element_interactions -->
@@ -256,16 +256,16 @@
 		<!-- Hero content -->
 		<div class="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 			<div class="mx-auto max-w-3xl text-center">
-				<div class="hero-badge mb-6 inline-flex items-center gap-2 rounded-full border border-indigo-300/60 bg-white/70 px-5 py-2 shadow-sm backdrop-blur-md dark:border-white/10 dark:bg-white/[0.06]">
+				<div class="hero-badge mb-6 inline-flex items-center gap-2 rounded-full border border-red-300/60 bg-white/70 px-5 py-2 shadow-sm backdrop-blur-md dark:border-white/10 dark:bg-white/[0.06]">
 					<span class="relative flex h-2 w-2">
-						<span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-indigo-500 opacity-60"></span>
-						<span class="relative inline-flex h-2 w-2 rounded-full bg-gradient-to-br from-indigo-500 to-violet-500"></span>
+						<span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-500 opacity-60"></span>
+						<span class="relative inline-flex h-2 w-2 rounded-full bg-gradient-to-br from-red-500 to-red-500"></span>
 					</span>
-					<span class="text-xs font-bold uppercase tracking-[0.2em] text-indigo-700 dark:text-indigo-300">Event Calendar</span>
+					<span class="text-xs font-bold uppercase tracking-[0.2em] text-red-700 dark:text-red-300">Event Calendar</span>
 				</div>
 
 				<h1 class="hero-title text-5xl font-black tracking-tight text-gray-950 dark:text-white sm:text-7xl lg:text-8xl">
-					Veent
+					Veent Tix
 					<span class="gradient-text-animated relative inline-block">Calendar</span>
 				</h1>
 
@@ -279,7 +279,7 @@
 		<div class="stats-entrance relative z-20 mx-auto mt-12 max-w-3xl px-4 sm:mt-16 sm:px-6 lg:px-8">
 			<div class="grid grid-cols-3 gap-3 sm:gap-4">
 				<div class="stat-card glass-card flex items-center gap-2.5 rounded-2xl p-3 sm:gap-3.5 sm:p-5">
-					<div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-indigo-100 text-indigo-600 dark:bg-indigo-500/15 dark:text-indigo-400 sm:h-11 sm:w-11">
+					<div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-red-100 text-red-600 dark:bg-red-500/15 dark:text-red-400 sm:h-11 sm:w-11">
 						<svg class="h-4 w-4 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
 							<path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
 						</svg>
@@ -291,7 +291,7 @@
 				</div>
 
 				<div class="stat-card glass-card flex items-center gap-2.5 rounded-2xl p-3 sm:gap-3.5 sm:p-5" style="animation-delay: 80ms">
-					<div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-rose-100 text-rose-600 dark:bg-rose-500/15 dark:text-rose-400 sm:h-11 sm:w-11">
+					<div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-red-100 text-red-600 dark:bg-red-500/15 dark:text-red-400 sm:h-11 sm:w-11">
 						<svg class="h-4 w-4 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
 							<path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
 						</svg>
@@ -303,7 +303,7 @@
 				</div>
 
 				<div class="stat-card glass-card flex items-center gap-2.5 rounded-2xl p-3 sm:gap-3.5 sm:p-5" style="animation-delay: 160ms">
-					<div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-emerald-100 text-emerald-600 dark:bg-emerald-500/15 dark:text-emerald-400 sm:h-11 sm:w-11">
+					<div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-red-100 text-red-600 dark:bg-red-500/15 dark:text-red-400 sm:h-11 sm:w-11">
 						<svg class="h-4 w-4 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
 							<path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
 						</svg>
@@ -322,7 +322,7 @@
 	     ╚══════════════════════════════════════════════════════════════╝ -->
 	<section class="relative pb-24 pt-12">
 		<!-- Ambient glow -->
-		<div class="pointer-events-none absolute left-1/2 top-0 h-[500px] w-[700px] -translate-x-1/2 -translate-y-1/4 rounded-full bg-indigo-200/20 blur-[100px] dark:bg-indigo-600/[0.06]"></div>
+		<div class="pointer-events-none absolute left-1/2 top-0 h-[500px] w-[700px] -translate-x-1/2 -translate-y-1/4 rounded-full bg-red-200/20 blur-[100px] dark:bg-red-600/[0.06]"></div>
 
 		<div class="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
@@ -331,7 +331,7 @@
 				<div class="flex items-center justify-between">
 					<button
 						onclick={prevMonth}
-						class="nav-arrow group flex cursor-pointer items-center gap-1.5 rounded-xl border border-gray-300/80 bg-white/70 px-3 py-2 text-sm font-semibold text-gray-700 backdrop-blur-sm transition-all duration-300 hover:border-indigo-400 hover:bg-indigo-50 hover:text-indigo-700 hover:shadow-lg hover:shadow-indigo-500/10 dark:border-white/10 dark:bg-white/[0.06] dark:text-gray-200 dark:hover:border-indigo-500/40 dark:hover:bg-indigo-500/10 dark:hover:text-indigo-300 sm:px-4 sm:py-2.5"
+						class="nav-arrow group flex cursor-pointer items-center gap-1.5 rounded-xl border border-gray-300/80 bg-white/70 px-3 py-2 text-sm font-semibold text-gray-700 backdrop-blur-sm transition-all duration-300 hover:border-red-400 hover:bg-red-50 hover:text-red-700 hover:shadow-lg hover:shadow-red-500/10 dark:border-white/10 dark:bg-white/[0.06] dark:text-gray-200 dark:hover:border-red-500/40 dark:hover:bg-red-500/10 dark:hover:text-red-300 sm:px-4 sm:py-2.5"
 					>
 						<svg class="h-4 w-4 transition-transform duration-300 group-hover:-translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
 							<path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
@@ -343,11 +343,11 @@
 						<div class="flex items-center gap-2 sm:gap-3">
 							<h2 class="month-title text-lg font-bold sm:text-2xl lg:text-3xl">
 								<span class="text-gray-900 dark:text-white">{MONTH_NAMES[currentMonth]}</span>
-								<span class="bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent dark:from-indigo-400 dark:to-violet-400">{currentYear}</span>
+								<span class="bg-gradient-to-r from-red-600 to-red-600 bg-clip-text text-transparent dark:from-red-400 dark:to-red-400">{currentYear}</span>
 							</h2>
 							<button
 								onclick={goToToday}
-								class="cursor-pointer rounded-lg border border-indigo-300 bg-gradient-to-r from-indigo-100 to-violet-100 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-indigo-700 transition-all duration-300 hover:border-indigo-400 hover:shadow-md hover:shadow-indigo-500/10 dark:border-indigo-500/30 dark:from-indigo-500/10 dark:to-violet-500/10 dark:text-indigo-300 dark:hover:border-indigo-500/50 sm:text-xs"
+								class="cursor-pointer rounded-lg border border-red-300 bg-gradient-to-r from-red-100 to-red-100 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-red-700 transition-all duration-300 hover:border-red-400 hover:shadow-md hover:shadow-red-500/10 dark:border-red-500/30 dark:from-red-500/10 dark:to-red-500/10 dark:text-red-300 dark:hover:border-red-500/50 sm:text-xs"
 							>
 								Today
 							</button>
@@ -362,9 +362,9 @@
 								<button
 									onclick={() => selectDay(d)}
 									class="h-1.5 w-1.5 cursor-pointer rounded-full transition-all duration-200 hover:scale-150
-										{isT ? 'scale-150 !bg-indigo-500 shadow-sm shadow-indigo-500/60' :
-										 hasEv ? '!bg-rose-500 shadow-sm shadow-rose-400/40' :
-										 isSel ? '!bg-indigo-400' :
+										{isT ? 'scale-150 !bg-red-500 shadow-sm shadow-red-500/60' :
+										 hasEv ? '!bg-red-500 shadow-sm shadow-red-400/40' :
+										 isSel ? '!bg-red-400' :
 										 '!bg-gray-400 dark:!bg-gray-500 hover:!bg-gray-500 dark:hover:!bg-gray-400'}"
 									aria-label="Day {d}"
 								></button>
@@ -375,7 +375,7 @@
 					<div class="flex items-center gap-2">
 						<button
 							onclick={nextMonth}
-							class="nav-arrow group flex cursor-pointer items-center gap-1.5 rounded-xl border border-gray-300/80 bg-white/70 px-3 py-2 text-sm font-semibold text-gray-700 backdrop-blur-sm transition-all duration-300 hover:border-indigo-400 hover:bg-indigo-50 hover:text-indigo-700 hover:shadow-lg hover:shadow-indigo-500/10 dark:border-white/10 dark:bg-white/[0.06] dark:text-gray-200 dark:hover:border-indigo-500/40 dark:hover:bg-indigo-500/10 dark:hover:text-indigo-300 sm:px-4 sm:py-2.5"
+							class="nav-arrow group flex cursor-pointer items-center gap-1.5 rounded-xl border border-gray-300/80 bg-white/70 px-3 py-2 text-sm font-semibold text-gray-700 backdrop-blur-sm transition-all duration-300 hover:border-red-400 hover:bg-red-50 hover:text-red-700 hover:shadow-lg hover:shadow-red-500/10 dark:border-white/10 dark:bg-white/[0.06] dark:text-gray-200 dark:hover:border-red-500/40 dark:hover:bg-red-500/10 dark:hover:text-red-300 sm:px-4 sm:py-2.5"
 						>
 							<span class="hidden sm:inline">Next</span>
 							<svg class="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
@@ -390,7 +390,7 @@
 			{#if monthProgress > 0}
 				<div class="mb-4 h-1 overflow-hidden rounded-full bg-gray-200/60 dark:bg-white/[0.08] sm:mb-6">
 					<div
-						class="h-full rounded-full bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 transition-all duration-700 ease-out"
+						class="h-full rounded-full bg-gradient-to-r from-red-500 via-red-500 to-red-500 transition-all duration-700 ease-out"
 						style="width: {monthProgress}%"
 					></div>
 				</div>
@@ -434,15 +434,15 @@
 											style="min-height: 88px; animation-delay: {(i % 7) * 25 + Math.floor(i / 7) * 35}ms;"
 										>
 											<!-- Hover gradient -->
-											<div class="pointer-events-none absolute inset-0 bg-gradient-to-br from-indigo-500/0 via-violet-500/0 to-purple-500/0 opacity-0 transition-all duration-500 group-hover:opacity-100 group-hover:from-indigo-50/70 group-hover:via-violet-50/40 group-hover:to-purple-50/20 dark:group-hover:from-indigo-500/[0.08] dark:group-hover:via-violet-500/[0.05] dark:group-hover:to-purple-500/[0.03]"></div>
+											<div class="pointer-events-none absolute inset-0 bg-gradient-to-br from-red-500/0 via-red-500/0 to-red-500/0 opacity-0 transition-all duration-500 group-hover:opacity-100 group-hover:from-red-50/70 group-hover:via-red-50/40 group-hover:to-red-50/20 dark:group-hover:from-red-500/[0.08] dark:group-hover:via-red-500/[0.05] dark:group-hover:to-red-500/[0.03]"></div>
 
 											<!-- Hover top accent -->
-											<div class="pointer-events-none absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 opacity-0 transition-opacity duration-300 group-hover:opacity-60"></div>
+											<div class="pointer-events-none absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-red-500 via-red-500 to-red-500 opacity-0 transition-opacity duration-300 group-hover:opacity-60"></div>
 
 											<!-- Selected ring -->
 											{#if isSelected}
-												<div class="pointer-events-none absolute inset-0 ring-2 ring-inset ring-indigo-500/50 dark:ring-indigo-400/40"></div>
-												<div class="pointer-events-none absolute inset-0 bg-indigo-50/50 dark:bg-indigo-500/[0.1]"></div>
+												<div class="pointer-events-none absolute inset-0 ring-2 ring-inset ring-red-500/50 dark:ring-red-400/40"></div>
+												<div class="pointer-events-none absolute inset-0 bg-red-50/50 dark:bg-red-500/[0.1]"></div>
 											{/if}
 
 											<!-- Cell content -->
@@ -451,24 +451,24 @@
 													<span
 														class="day-number inline-flex h-7 w-7 items-center justify-center rounded-full text-xs font-semibold transition-all duration-300 sm:text-sm
 															{todayCheck
-																? 'today-badge bg-gradient-to-br from-indigo-500 via-violet-500 to-purple-600 text-white shadow-lg shadow-indigo-500/40'
+																? 'today-badge bg-gradient-to-br from-red-500 via-red-500 to-red-600 text-white shadow-lg shadow-red-500/40'
 																: isSelected
-																	? 'text-indigo-600 dark:text-indigo-300 font-bold'
+																	? 'text-red-600 dark:text-red-300 font-bold'
 																	: 'text-gray-800 group-hover:text-gray-950 dark:text-gray-300 dark:group-hover:text-white'}"
 													>
 														{day}
 													</span>
 													{#if isBusy}
 														<span class="relative mt-1 flex h-2 w-2">
-															<span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-rose-400 opacity-40"></span>
-															<span class="relative inline-flex h-2 w-2 rounded-full bg-gradient-to-br from-rose-400 to-pink-500 shadow-sm shadow-rose-500/40"></span>
+															<span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-40"></span>
+															<span class="relative inline-flex h-2 w-2 rounded-full bg-gradient-to-br from-red-400 to-red-500 shadow-sm shadow-red-500/40"></span>
 														</span>
 													{/if}
 												</div>
 												{#if dayEvents.length > 0}
 													<div class="mt-1 space-y-0.5 sm:mt-1.5 sm:space-y-1">
 														{#each dayEvents.slice(0, 2) as ev}
-															<div class="event-pill truncate rounded-md border border-rose-200/60 bg-gradient-to-r from-rose-50 to-pink-50/80 px-1.5 py-0.5 text-[9px] font-medium leading-tight text-rose-700 dark:border-rose-500/25 dark:from-rose-500/15 dark:to-pink-500/10 dark:text-rose-300 sm:text-[11px]">
+															<div class="event-pill truncate rounded-md border border-red-200/60 bg-gradient-to-r from-red-50 to-red-50/80 px-1.5 py-0.5 text-[9px] font-medium leading-tight text-red-700 dark:border-red-500/25 dark:from-red-500/15 dark:to-red-500/10 dark:text-red-300 sm:text-[11px]">
 																{ev.title}
 															</div>
 														{/each}
@@ -481,7 +481,7 @@
 
 											<!-- Busy day bottom accent -->
 											{#if isBusy}
-												<div class="pointer-events-none absolute inset-x-0 bottom-0 h-[2px] bg-gradient-to-r from-rose-400/60 via-pink-400/40 to-rose-400/60"></div>
+												<div class="pointer-events-none absolute inset-x-0 bottom-0 h-[2px] bg-gradient-to-r from-red-400/60 via-red-400/40 to-red-400/60"></div>
 											{/if}
 										</button>
 									{/if}
@@ -496,20 +496,20 @@
 					<div class="detail-panel glass-card overflow-hidden rounded-3xl" class:detail-enter={selectedDay !== null}>
 						{#if selectedDay !== null}
 							<!-- Gradient accent bar -->
-							<div class="h-1 bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500"></div>
+							<div class="h-1 bg-gradient-to-r from-red-500 via-red-500 to-red-500"></div>
 
 							<div class="p-5 sm:p-6">
 								<!-- Header -->
 								<div class="mb-5 flex items-center justify-between gap-3">
 									<div class="min-w-0">
-										<p class="mb-0.5 text-[10px] font-bold uppercase tracking-[0.15em] text-indigo-600 dark:text-indigo-400">Selected</p>
+										<p class="mb-0.5 text-[10px] font-bold uppercase tracking-[0.15em] text-red-600 dark:text-red-400">Selected</p>
 										<h3 class="truncate text-lg font-bold text-gray-900 dark:text-white sm:text-xl">
 											{MONTH_NAMES[currentMonth]} {selectedDay}
 										</h3>
 									</div>
 									<button
 										onclick={openAddModal}
-										class="add-btn group inline-flex shrink-0 cursor-pointer items-center gap-1.5 rounded-xl border border-indigo-200/60 bg-gradient-to-r from-indigo-600 to-violet-600 px-3.5 py-2 text-xs font-semibold text-white shadow-lg shadow-indigo-500/25 transition-all duration-300 hover:shadow-xl hover:shadow-indigo-500/35 hover:brightness-110 dark:border-indigo-500/30 sm:px-4 sm:py-2.5 sm:text-sm"
+										class="add-btn group inline-flex shrink-0 cursor-pointer items-center gap-1.5 rounded-xl border border-red-200/60 bg-gradient-to-r from-red-600 to-red-600 px-3.5 py-2 text-xs font-semibold text-white shadow-lg shadow-red-500/25 transition-all duration-300 hover:shadow-xl hover:shadow-red-500/35 hover:brightness-110 dark:border-red-500/30 sm:px-4 sm:py-2.5 sm:text-sm"
 									>
 										<svg class="h-3.5 w-3.5 transition-transform duration-300 group-hover:rotate-90" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
 											<path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
@@ -522,12 +522,12 @@
 								{#if selectedEvents.length > 0}
 									<div class="timeline relative space-y-3">
 										<!-- Timeline line -->
-										<div class="absolute bottom-3 left-[7px] top-3 w-[2px] rounded-full bg-gradient-to-b from-indigo-200 via-violet-200 to-purple-200 dark:from-indigo-500/30 dark:via-violet-500/20 dark:to-purple-500/10"></div>
+										<div class="absolute bottom-3 left-[7px] top-3 w-[2px] rounded-full bg-gradient-to-b from-red-200 via-red-200 to-red-200 dark:from-red-500/30 dark:via-red-500/20 dark:to-red-500/10"></div>
 
 										{#each selectedEvents as ev, i}
 											<div class="timeline-item relative flex gap-3.5 pl-5" style="animation-delay: {i * 60}ms">
 												<!-- Dot -->
-												<div class="absolute left-0 top-2.5 flex h-[14px] w-[14px] items-center justify-center rounded-full border-2 border-white bg-gradient-to-br from-indigo-500 to-violet-500 shadow-md shadow-indigo-500/30 dark:border-[#0d1222]">
+												<div class="absolute left-0 top-2.5 flex h-[14px] w-[14px] items-center justify-center rounded-full border-2 border-white bg-gradient-to-br from-red-500 to-red-500 shadow-md shadow-red-500/30 dark:border-[#0d1222]">
 													<div class="h-1 w-1 rounded-full bg-white"></div>
 												</div>
 
@@ -553,7 +553,7 @@
 														<button
 															onclick={() => deleteEvent(ev.id)}
 															disabled={deletingId === ev.id}
-															class="shrink-0 cursor-pointer rounded-lg border border-gray-200/60 bg-white/80 p-1.5 text-gray-400 transition-all duration-300 hover:border-rose-300 hover:bg-rose-50 hover:text-rose-500 hover:shadow-md hover:shadow-rose-500/10 disabled:cursor-not-allowed disabled:opacity-50 dark:border-white/[0.08] dark:bg-white/[0.06] dark:text-gray-400 dark:hover:border-rose-500/30 dark:hover:bg-rose-500/10 dark:hover:text-rose-400 sm:p-2"
+															class="shrink-0 cursor-pointer rounded-lg border border-gray-200/60 bg-white/80 p-1.5 text-gray-400 transition-all duration-300 hover:border-red-300 hover:bg-red-50 hover:text-red-500 hover:shadow-md hover:shadow-red-500/10 disabled:cursor-not-allowed disabled:opacity-50 dark:border-white/[0.08] dark:bg-white/[0.06] dark:text-gray-400 dark:hover:border-red-500/30 dark:hover:bg-red-500/10 dark:hover:text-red-400 sm:p-2"
 															aria-label="Delete event"
 														>
 															{#if deletingId === ev.id}
@@ -621,7 +621,7 @@
 					<div class="border-b border-white/[0.06] px-5 py-4 sm:px-6">
 						<div class="flex items-center justify-between">
 							<div class="flex items-center gap-3">
-								<div class="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-500/15 text-indigo-400">
+								<div class="flex h-9 w-9 items-center justify-center rounded-xl bg-red-500/15 text-red-400">
 									<svg class="h-4.5 w-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
 										<path stroke-linecap="round" stroke-linejoin="round" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 12h.007v.008H3.75V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm-.375 5.25h.007v.008H3.75v-.008zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
 									</svg>
@@ -649,7 +649,7 @@
 								>
 									<!-- Date badge -->
 									<div class="flex h-11 w-11 shrink-0 flex-col items-center justify-center rounded-xl border border-white/[0.06] bg-white/[0.04]">
-										<span class="text-[10px] font-semibold uppercase leading-none text-indigo-400">{MONTH_NAMES[startDate.getMonth()].slice(0, 3)}</span>
+										<span class="text-[10px] font-semibold uppercase leading-none text-red-400">{MONTH_NAMES[startDate.getMonth()].slice(0, 3)}</span>
 										<span class="text-base font-bold leading-tight text-white">{startDate.getDate()}</span>
 									</div>
 
@@ -661,13 +661,13 @@
 												{start}
 											{:else}
 												{start} → {end}
-												<span class="ml-1 inline-flex items-center rounded-md bg-indigo-500/15 px-1.5 py-0.5 text-[10px] font-medium text-indigo-300">{diffDays} days</span>
+												<span class="ml-1 inline-flex items-center rounded-md bg-red-500/15 px-1.5 py-0.5 text-[10px] font-medium text-red-300">{diffDays} days</span>
 											{/if}
 										</p>
 									</div>
 
 									<!-- Indicator dot -->
-									<div class="flex h-2 w-2 shrink-0 rounded-full bg-gradient-to-br from-rose-400 to-pink-500 shadow-sm shadow-rose-500/40"></div>
+									<div class="flex h-2 w-2 shrink-0 rounded-full bg-gradient-to-br from-red-400 to-red-500 shadow-sm shadow-red-500/40"></div>
 								</div>
 							{/each}
 						</div>
@@ -701,10 +701,10 @@
 		<div class="modal-content mx-4 w-full max-w-md">
 			<div class="modal-card relative overflow-hidden rounded-3xl border border-gray-200/50 bg-white/95 shadow-2xl shadow-gray-900/10 backdrop-blur-2xl dark:border-white/[0.08] dark:bg-[#0d1222]/95 dark:shadow-black/60">
 				<!-- Gradient top -->
-				<div class="h-1 bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500"></div>
+				<div class="h-1 bg-gradient-to-r from-red-500 via-red-500 to-red-500"></div>
 
 				<!-- Decorative glow -->
-				<div class="pointer-events-none absolute -top-16 left-1/2 h-32 w-64 -translate-x-1/2 rounded-full bg-indigo-200/30 blur-[60px] dark:bg-indigo-500/15"></div>
+				<div class="pointer-events-none absolute -top-16 left-1/2 h-32 w-64 -translate-x-1/2 rounded-full bg-red-200/30 blur-[60px] dark:bg-red-500/15"></div>
 
 				<div class="relative p-6 sm:p-8">
 					<div class="mb-6 flex items-center justify-between">
@@ -725,7 +725,7 @@
 
 					<form onsubmit={(e) => { e.preventDefault(); addEvent(); }} class="space-y-4">
 						{#if addError}
-							<div class="error-shake rounded-xl border border-rose-200/80 bg-rose-50/80 px-4 py-2.5 text-xs font-medium text-rose-600 dark:border-rose-500/20 dark:bg-rose-500/10 dark:text-rose-300 sm:text-sm">
+							<div class="error-shake rounded-xl border border-red-200/80 bg-red-50/80 px-4 py-2.5 text-xs font-medium text-red-600 dark:border-red-500/20 dark:bg-red-500/10 dark:text-red-300 sm:text-sm">
 								{addError}
 							</div>
 						{/if}
@@ -737,7 +737,7 @@
 								type="text"
 								bind:value={addTitle}
 								required
-								class="modal-input w-full rounded-xl border border-gray-200/80 bg-gray-50/80 px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 transition-all duration-300 focus:border-indigo-400 focus:bg-white focus:shadow-lg focus:shadow-indigo-500/10 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-white dark:placeholder-gray-600 dark:focus:border-indigo-500/50 dark:focus:bg-white/[0.08] dark:focus:shadow-indigo-500/10"
+								class="modal-input w-full rounded-xl border border-gray-200/80 bg-gray-50/80 px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 transition-all duration-300 focus:border-red-400 focus:bg-white focus:shadow-lg focus:shadow-red-500/10 focus:outline-none focus:ring-2 focus:ring-red-500/20 dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-white dark:placeholder-gray-600 dark:focus:border-red-500/50 dark:focus:bg-white/[0.08] dark:focus:shadow-red-500/10"
 								placeholder="e.g. Team meeting"
 							/>
 						</div>
@@ -750,7 +750,7 @@
 								id="cal-desc"
 								bind:value={addDescription}
 								rows="2"
-								class="modal-input w-full resize-none rounded-xl border border-gray-200/80 bg-gray-50/80 px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 transition-all duration-300 focus:border-indigo-400 focus:bg-white focus:shadow-lg focus:shadow-indigo-500/10 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-white dark:placeholder-gray-600 dark:focus:border-indigo-500/50 dark:focus:bg-white/[0.08] dark:focus:shadow-indigo-500/10"
+								class="modal-input w-full resize-none rounded-xl border border-gray-200/80 bg-gray-50/80 px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 transition-all duration-300 focus:border-red-400 focus:bg-white focus:shadow-lg focus:shadow-red-500/10 focus:outline-none focus:ring-2 focus:ring-red-500/20 dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-white dark:placeholder-gray-600 dark:focus:border-red-500/50 dark:focus:bg-white/[0.08] dark:focus:shadow-red-500/10"
 								placeholder="Add details..."
 							></textarea>
 						</div>
@@ -763,7 +763,7 @@
 									type="date"
 									bind:value={addStartDate}
 									required
-									class="modal-input w-full rounded-xl border border-gray-200/80 bg-gray-50/80 px-3 py-2.5 text-sm text-gray-900 transition-all duration-300 focus:border-indigo-400 focus:bg-white focus:shadow-lg focus:shadow-indigo-500/10 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-white dark:focus:border-indigo-500/50 dark:focus:bg-white/[0.08] dark:focus:shadow-indigo-500/10"
+									class="modal-input w-full rounded-xl border border-gray-200/80 bg-gray-50/80 px-3 py-2.5 text-sm text-gray-900 transition-all duration-300 focus:border-red-400 focus:bg-white focus:shadow-lg focus:shadow-red-500/10 focus:outline-none focus:ring-2 focus:ring-red-500/20 dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-white dark:focus:border-red-500/50 dark:focus:bg-white/[0.08] dark:focus:shadow-red-500/10"
 								/>
 							</div>
 							<div>
@@ -773,7 +773,7 @@
 									type="date"
 									bind:value={addEndDate}
 									required
-									class="modal-input w-full rounded-xl border border-gray-200/80 bg-gray-50/80 px-3 py-2.5 text-sm text-gray-900 transition-all duration-300 focus:border-indigo-400 focus:bg-white focus:shadow-lg focus:shadow-indigo-500/10 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-white dark:focus:border-indigo-500/50 dark:focus:bg-white/[0.08] dark:focus:shadow-indigo-500/10"
+									class="modal-input w-full rounded-xl border border-gray-200/80 bg-gray-50/80 px-3 py-2.5 text-sm text-gray-900 transition-all duration-300 focus:border-red-400 focus:bg-white focus:shadow-lg focus:shadow-red-500/10 focus:outline-none focus:ring-2 focus:ring-red-500/20 dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-white dark:focus:border-red-500/50 dark:focus:bg-white/[0.08] dark:focus:shadow-red-500/10"
 								/>
 							</div>
 						</div>
@@ -789,7 +789,7 @@
 							<button
 								type="submit"
 								disabled={submitting}
-								class="submit-btn group inline-flex cursor-pointer items-center gap-1.5 rounded-xl border border-indigo-500/30 bg-gradient-to-r from-indigo-600 to-violet-600 px-5 py-2.5 text-xs font-semibold text-white shadow-lg shadow-indigo-500/25 transition-all duration-300 hover:shadow-xl hover:shadow-indigo-500/40 hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50 sm:text-sm"
+								class="submit-btn group inline-flex cursor-pointer items-center gap-1.5 rounded-xl border border-red-500/30 bg-gradient-to-r from-red-600 to-red-600 px-5 py-2.5 text-xs font-semibold text-white shadow-lg shadow-red-500/25 transition-all duration-300 hover:shadow-xl hover:shadow-red-500/40 hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50 sm:text-sm"
 							>
 								{#if submitting}
 									<svg class="h-3.5 w-3.5 animate-spin" fill="none" viewBox="0 0 24 24">

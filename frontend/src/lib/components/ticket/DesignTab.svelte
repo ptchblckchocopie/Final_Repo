@@ -67,7 +67,7 @@
 	<!-- Mobile Sidebar Toggle -->
 	<button
 		onclick={() => (sidebarOpen = !sidebarOpen)}
-		class="fixed bottom-4 left-4 z-30 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-indigo-600 text-white shadow-lg md:hidden"
+		class="fixed bottom-4 left-4 z-30 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-red-600 text-white shadow-lg md:hidden"
 		aria-label="Toggle sidebar"
 	>
 		<svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
