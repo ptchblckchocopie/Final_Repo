@@ -7,7 +7,8 @@ export const Events: CollectionConfig = {
   },
   access: {
     create: () => true,
-    read: () => true, // Allows public access so SvelteKit can fetch it
+    read: () => true,
+    update: () => true,
   },
   fields: [
     {
@@ -16,15 +17,80 @@ export const Events: CollectionConfig = {
       required: true,
     },
     {
+      name: 'slug',
+      type: 'text',
+      required: true,
+      unique: true,
+      admin: { description: 'URL-friendly identifier (auto-generated from title)' },
+    },
+    {
       name: 'content',
       type: 'textarea', // Use 'richText' if you want a full editor
       required: true,
     },
      {
       name: 'event_date',
-      type: 'date', // Use 'richText' if you want a full editor
+      type: 'date',
       required: true,
     },
-    
+    {
+      name: 'start_time',
+      type: 'text',
+      admin: { description: 'Start time in HH:MM format' },
+    },
+    {
+      name: 'end_date',
+      type: 'date',
+    },
+    {
+      name: 'end_time',
+      type: 'text',
+      admin: { description: 'End time in HH:MM format' },
+    },
+    {
+      name: 'location',
+      type: 'text',
+    },
+    {
+      name: 'tickets',
+      type: 'array',
+      label: 'Ticket Types',
+      admin: { description: 'Define ticket types for this event' },
+      fields: [
+        {
+          name: 'ticket_name',
+          type: 'text',
+          required: true,
+        },
+        {
+          name: 'ticket_price',
+          type: 'number',
+          required: true,
+          min: 0,
+        },
+        {
+          name: 'ticket_color',
+          type: 'text',
+          required: true,
+          defaultValue: '#6366f1',
+          admin: { description: 'Hex color code for this ticket type' },
+        },
+      ],
+    },
+    {
+      name: 'poster',
+      type: 'upload',
+      relationTo: 'media',
+    },
+    {
+      name: 'company_logo',
+      type: 'upload',
+      relationTo: 'media',
+    },
+    {
+      name: 'background_image',
+      type: 'upload',
+      relationTo: 'media',
+    },
   ],
 }

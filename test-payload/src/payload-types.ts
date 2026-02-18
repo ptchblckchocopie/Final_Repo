@@ -188,8 +188,39 @@ export interface Post {
 export interface Event {
   id: number;
   title: string;
+  /**
+   * URL-friendly identifier (auto-generated from title)
+   */
+  slug: string;
   content: string;
   event_date: string;
+  /**
+   * Start time in HH:MM format
+   */
+  start_time?: string | null;
+  end_date?: string | null;
+  /**
+   * End time in HH:MM format
+   */
+  end_time?: string | null;
+  location?: string | null;
+  /**
+   * Define ticket types for this event
+   */
+  tickets?:
+    | {
+        ticket_name: string;
+        ticket_price: number;
+        /**
+         * Hex color code for this ticket type
+         */
+        ticket_color: string;
+        id?: string | null;
+      }[]
+    | null;
+  poster?: (number | null) | Media;
+  company_logo?: (number | null) | Media;
+  background_image?: (number | null) | Media;
   updatedAt: string;
   createdAt: string;
 }
@@ -456,8 +487,24 @@ export interface PostsSelect<T extends boolean = true> {
  */
 export interface EventSelect<T extends boolean = true> {
   title?: T;
+  slug?: T;
   content?: T;
   event_date?: T;
+  start_time?: T;
+  end_date?: T;
+  end_time?: T;
+  location?: T;
+  tickets?:
+    | T
+    | {
+        ticket_name?: T;
+        ticket_price?: T;
+        ticket_color?: T;
+        id?: T;
+      };
+  poster?: T;
+  company_logo?: T;
+  background_image?: T;
   updatedAt?: T;
   createdAt?: T;
 }
