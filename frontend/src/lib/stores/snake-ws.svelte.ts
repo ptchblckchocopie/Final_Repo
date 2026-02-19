@@ -1,3 +1,4 @@
+import { PUBLIC_WS_URL } from '$env/static/public';
 import type { SnakeGameState, SnakeCosmetics } from '$lib/types/snake';
 
 type ConnectionStatus = 'disconnected' | 'connecting' | 'connected';
@@ -31,7 +32,7 @@ const PING_INTERVAL = 2000;
 
 function getWsUrl(): string {
 	if (typeof window === 'undefined') return '';
-	const envUrl = (import.meta.env as Record<string, string>).PUBLIC_WS_URL;
+	const envUrl = PUBLIC_WS_URL;
 	if (envUrl) return envUrl.replace(/\/ws$/, '/ws/snake');
 	const proto = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
 	return `${proto}//${window.location.host}/ws/snake`;

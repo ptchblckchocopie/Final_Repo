@@ -1,3 +1,4 @@
+import { PUBLIC_WS_URL } from '$env/static/public';
 import type { PayloadMessage } from '$lib/types/payload';
 import type { Stroke, StrokeProgress } from '$lib/types/drawing';
 
@@ -26,7 +27,7 @@ function getWsUrl(): string {
 	if (typeof window === 'undefined') return '';
 	// In dev, Vite proxies /ws to the WS server
 	// In prod, use PUBLIC_WS_URL env var or default to same-host
-	const envUrl = (import.meta.env as Record<string, string>).PUBLIC_WS_URL;
+	const envUrl = PUBLIC_WS_URL;
 	if (envUrl) return envUrl;
 	const proto = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
 	return `${proto}//${window.location.host}/ws`;
