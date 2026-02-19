@@ -1,4 +1,4 @@
-const WS_PORT = parseInt(process.env.WS_PORT || '3001', 10);
+const WS_PORT = parseInt(process.env.PORT || process.env.WS_PORT || '3001', 10);
 const PAYLOAD_URL = process.env.PAYLOAD_URL || 'http://localhost:3000';
 const HEARTBEAT_INTERVAL = 30_000;
 const MAX_STROKES = 500;
