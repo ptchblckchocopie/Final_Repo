@@ -1,0 +1,13 @@
+node_modules
+.next
+.env
+.env.local
+.git
+fly.toml
+fly.ws.toml
+Dockerfile.ws
+package-lock.json
+media
+test-results
+playwright-report
+blob-report
