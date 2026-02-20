@@ -34,6 +34,11 @@ ARG S3_SECRET_ACCESS_KEY
 ARG S3_ENDPOINT
 ARG CORS_ORIGINS
 
+# Dummy build-time secrets so Next.js can collect page data.
+# Real values are injected at runtime via Fly.io secrets.
+ENV PAYLOAD_SECRET=build-time-placeholder-not-used-at-runtime-32chars
+ENV DATABASE_URL=postgres://placeholder:placeholder@localhost:5432/placeholder
+
 RUN \
   if [ -f yarn.lock ]; then yarn run build; \
   elif [ -f package-lock.json ]; then npm run build; \

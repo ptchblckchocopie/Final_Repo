@@ -27,7 +27,11 @@ let lastSignalTimestamp = '';
 let pendingIceCandidates: RTCIceCandidate[] = [];
 
 const RTC_CONFIG: RTCConfiguration = {
-	iceServers: [{ urls: 'stun:stun.l.google.com:19302' }],
+	iceServers: [
+		{ urls: 'stun:stun.l.google.com:19302' },
+		{ urls: 'stun:stun1.l.google.com:19302' },
+		{ urls: 'stun:stun.cloudflare.com:3478' },
+	],
 };
 
 export function getCallState() {
@@ -164,7 +168,9 @@ export async function acceptCall() {
 
 		await updateCallSignalStatus(incomingSignal.id, 'active');
 
-		lastSignalTimestamp = new Date().toISOString();
+		// Use the offer's createdAt so we pick up ICE candidates the caller
+		// sent between creating the offer and us accepting the call.
+		lastSignalTimestamp = incomingSignal.createdAt;
 		startSignalingPoll();
 	} catch {
 		cleanup();
