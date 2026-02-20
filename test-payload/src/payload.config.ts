@@ -27,18 +27,20 @@ if (!secret || secret.length < 32) {
 }
 
 // SEC-H2: Environment-based CORS origins
-// Supports exact origins and wildcard patterns like https://*.pages.dev
-const corsPatterns = process.env.CORS_ORIGINS
-  ? process.env.CORS_ORIGINS.split(',').map((o) => o.trim())
+// Exact origins passed to Payload; wildcard patterns handled via Next.js middleware
+const corsOrigins = process.env.CORS_ORIGINS
+  ? process.env.CORS_ORIGINS.split(',').map((o) => o.trim()).filter((o) => !o.includes('*'))
   : ['http://localhost:5173', 'http://localhost:4173']
 
-const corsOrigins = corsPatterns.map((pattern) => {
-  if (pattern.includes('*')) {
+// Export wildcard patterns for use in middleware.ts
+export const corsWildcardPatterns = (process.env.CORS_ORIGINS || '')
+  .split(',')
+  .map((o) => o.trim())
+  .filter((o) => o.includes('*'))
+  .map((pattern) => {
     const escaped = pattern.replace(/[.+?^${}()|[\]\\]/g, '\\$&').replace(/\*/g, '[^.]+')
     return new RegExp(`^${escaped}$`)
-  }
-  return pattern
-})
+  })
 
 export default buildConfig({
   admin: {

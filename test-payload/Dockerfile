@@ -30,6 +30,11 @@ COPY . .
 # Uncomment the following line in case you want to disable telemetry during the build.
 # ENV NEXT_TELEMETRY_DISABLED 1
 
+# Dummy build-time secrets so Next.js can collect page data.
+# Real values are injected at runtime via Fly.io secrets.
+ENV PAYLOAD_SECRET=build-time-placeholder-not-used-at-runtime-32chars
+ENV DATABASE_URL=postgres://placeholder:placeholder@localhost:5432/placeholder
+
 RUN \
   if [ -f yarn.lock ]; then yarn run build; \
   elif [ -f package-lock.json ]; then npm run build; \
@@ -47,9 +52,6 @@ ENV NODE_ENV production
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
-
-# Remove this line if you do not have this folder
-COPY --from=builder /app/public ./public
 
 # Set the correct permission for prerender cache
 RUN mkdir .next
