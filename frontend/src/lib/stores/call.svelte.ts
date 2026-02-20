@@ -54,6 +54,7 @@ export function setRemoteAudioElement(el: HTMLAudioElement) {
 	remoteAudioEl = el;
 	if (remoteStream) {
 		remoteAudioEl.srcObject = remoteStream;
+		remoteAudioEl.play().catch(() => {});
 	}
 }
 
@@ -119,7 +120,9 @@ export async function startCall(targetUser: string) {
 		});
 		offerSignalId = offerSignal.id;
 
-		lastSignalTimestamp = new Date().toISOString();
+		// Use the server's timestamp (not client clock) so polling
+		// picks up all subsequent signals regardless of clock skew.
+		lastSignalTimestamp = offerSignal.createdAt;
 		startSignalingPoll();
 		startOutgoingRingtone();
 	} catch {
@@ -252,6 +255,7 @@ function setupPeerConnectionHandlers() {
 			remoteStream = event.streams[0];
 			if (remoteAudioEl) {
 				remoteAudioEl.srcObject = remoteStream;
+				remoteAudioEl.play().catch(() => {});
 			}
 		}
 	};
