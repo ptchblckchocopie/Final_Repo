@@ -13,10 +13,11 @@ const FOOD_COUNT = 30;
 const RESPAWN_DELAY = 3000;
 
 interface ClientData {
-	kind: 'chat' | 'game';
+	kind: 'chat' | 'game' | 'fps';
 	sender: string;
 	alive: boolean;
 	gamePlayerId?: string;
+	fpsPlayerId?: string;
 }
 
 interface Point {
@@ -79,6 +80,69 @@ const foodItems: FoodItem[] = [];
 let gameTickInterval: ReturnType<typeof setInterval> | null = null;
 let gameTick = 0;
 let nextFoodId = 0;
+
+// --- FPS Game Constants ---
+const FPS_TICK_RATE = 20;
+const FPS_TICK_MS = Math.round(1000 / FPS_TICK_RATE);
+const FPS_ARENA_WIDTH = 100;
+const FPS_ARENA_DEPTH = 100;
+const FPS_ARENA_HEIGHT = 4;
+const FPS_PLAYER_HEALTH = 100;
+const FPS_ENEMY_DAMAGE = 10;
+const FPS_ENEMY_ATTACK_RANGE = 2.5;
+const FPS_ENEMY_ATTACK_CD = 1000;
+const FPS_BULLET_DAMAGE = 25;
+const FPS_BULLET_RANGE = 100;
+const FPS_WAVE_COUNTDOWN = 5;
+const FPS_RESPAWN_DELAY = 3000;
+
+const FPS_ENEMY_CONFIG = {
+	grunt:    { speed: 3,   hp: 30,  hitRadius: 0.7, score: 10 },
+	brute:    { speed: 1.5, hp: 100, hitRadius: 1.0, score: 30 },
+	sprinter: { speed: 6,   hp: 15,  hitRadius: 0.5, score: 15 },
+} as const;
+
+type FPSEnemyType = 'grunt' | 'brute' | 'sprinter';
+
+interface Vec3 { x: number; y: number; z: number; }
+
+interface FPSPlayer {
+	id: string;
+	name: string;
+	color: string;
+	position: Vec3;
+	rotation: { yaw: number; pitch: number };
+	health: number;
+	score: number;
+	kills: number;
+	alive: boolean;
+	respawnAt: number | null;
+}
+
+interface FPSEnemy {
+	id: string;
+	type: FPSEnemyType;
+	position: Vec3;
+	health: number;
+	maxHealth: number;
+	alive: boolean;
+	lastAttackTime: number;
+}
+
+// --- FPS Game State ---
+const fpsClients = new Map<string, ServerWebSocket>();
+const fpsPlayers = new Map<string, FPSPlayer>();
+const fpsEnemies = new Map<string, FPSEnemy>();
+let fpsTickInterval: ReturnType<typeof setInterval> | null = null;
+let fpsGameTick = 0;
+let fpsWaveNumber = 0;
+let fpsWaveState: 'countdown' | 'active' | 'completed' = 'countdown';
+let fpsWaveCountdown = FPS_WAVE_COUNTDOWN;
+let fpsWaveEnemiesTotal = 0;
+let fpsGameOver = false;
+let fpsTeamScore = 0;
+let fpsNextEnemyId = 0;
+let fpsLastTickTime = Date.now();
 
 // --- Chat helpers ---
 function getOnlineUsers(): string[] {
@@ -336,12 +400,387 @@ function generatePlayerId(): string {
 	return 'p_' + Math.random().toString(36).slice(2, 10);
 }
 
+// --- FPS Game helpers ---
+function broadcastFPS(data: object) {
+	const payload = JSON.stringify(data);
+	for (const ws of fpsClients.values()) {
+		ws.send(payload);
+	}
+}
+
+function broadcastFPSPlayerCount() {
+	broadcastFPS({ type: 'fps_players', count: fpsClients.size });
+}
+
+function fpsRandomSpawnPos(): Vec3 {
+	const halfW = FPS_ARENA_WIDTH / 2 - 3;
+	const halfD = FPS_ARENA_DEPTH / 2 - 3;
+	return {
+		x: (Math.random() - 0.5) * 2 * halfW,
+		y: 0,
+		z: (Math.random() - 0.5) * 2 * halfD,
+	};
+}
+
+function fpsSpawnEnemyAtEdge(): Vec3 {
+	const halfW = FPS_ARENA_WIDTH / 2 - 1;
+	const halfD = FPS_ARENA_DEPTH / 2 - 1;
+	const side = Math.floor(Math.random() * 4);
+	switch (side) {
+		case 0: return { x: -halfW, y: 0, z: (Math.random() - 0.5) * 2 * halfD };
+		case 1: return { x: halfW,  y: 0, z: (Math.random() - 0.5) * 2 * halfD };
+		case 2: return { x: (Math.random() - 0.5) * 2 * halfW, y: 0, z: -halfD };
+		default: return { x: (Math.random() - 0.5) * 2 * halfW, y: 0, z: halfD };
+	}
+}
+
+function fpsGetWaveConfig(waveNum: number) {
+	const totalEnemies = 3 + waveNum * 2;
+	const gruntCount = Math.max(1, Math.round(totalEnemies * Math.max(0.3, 1 - waveNum * 0.05)));
+	const bruteCount = Math.round(totalEnemies * Math.min(0.3, waveNum * 0.03));
+	const sprinterCount = totalEnemies - gruntCount - bruteCount;
+	return { totalEnemies, gruntCount, bruteCount, sprinterCount };
+}
+
+function fpsSpawnWaveEnemies() {
+	const config = fpsGetWaveConfig(fpsWaveNumber);
+	fpsWaveEnemiesTotal = config.totalEnemies;
+	const types: FPSEnemyType[] = [];
+	for (let i = 0; i < config.gruntCount; i++) types.push('grunt');
+	for (let i = 0; i < config.bruteCount; i++) types.push('brute');
+	for (let i = 0; i < config.sprinterCount; i++) types.push('sprinter');
+
+	for (const type of types) {
+		const cfg = FPS_ENEMY_CONFIG[type];
+		const pos = fpsSpawnEnemyAtEdge();
+		const id = `e${fpsNextEnemyId++}`;
+		fpsEnemies.set(id, {
+			id,
+			type,
+			position: pos,
+			health: cfg.hp,
+			maxHealth: cfg.hp,
+			alive: true,
+			lastAttackTime: 0,
+		});
+	}
+}
+
+function fpsRaySphereIntersect(
+	origin: Vec3, dir: Vec3, center: Vec3, radius: number
+): number | null {
+	const ox = origin.x - center.x;
+	const oy = origin.y - center.y;
+	const oz = origin.z - center.z;
+	const a = dir.x * dir.x + dir.y * dir.y + dir.z * dir.z;
+	const b = 2 * (ox * dir.x + oy * dir.y + oz * dir.z);
+	const c = ox * ox + oy * oy + oz * oz - radius * radius;
+	const disc = b * b - 4 * a * c;
+	if (disc < 0) return null;
+	const t = (-b - Math.sqrt(disc)) / (2 * a);
+	return t >= 0 ? t : null;
+}
+
+function fpsHandleShoot(player: FPSPlayer, origin: Vec3, direction: Vec3) {
+	if (!player.alive) return;
+	const len = Math.sqrt(direction.x ** 2 + direction.y ** 2 + direction.z ** 2);
+	if (len === 0) return;
+	const dir = { x: direction.x / len, y: direction.y / len, z: direction.z / len };
+
+	let closestHit: { enemy: FPSEnemy; dist: number } | null = null;
+
+	for (const enemy of fpsEnemies.values()) {
+		if (!enemy.alive) continue;
+		const cfg = FPS_ENEMY_CONFIG[enemy.type];
+		// Enemy center is at position + half height
+		const center = { x: enemy.position.x, y: enemy.position.y + cfg.hitRadius, z: enemy.position.z };
+		const dist = fpsRaySphereIntersect(origin, dir, center, cfg.hitRadius);
+		if (dist !== null && dist <= FPS_BULLET_RANGE) {
+			if (!closestHit || dist < closestHit.dist) {
+				closestHit = { enemy, dist };
+			}
+		}
+	}
+
+	if (closestHit) {
+		const enemy = closestHit.enemy;
+		enemy.health -= FPS_BULLET_DAMAGE;
+		const killed = enemy.health <= 0;
+		if (killed) {
+			enemy.alive = false;
+			player.kills++;
+			const cfg = FPS_ENEMY_CONFIG[enemy.type];
+			player.score += cfg.score;
+			fpsTeamScore += cfg.score;
+		}
+		broadcastFPS({
+			type: 'fps_hit',
+			enemyId: enemy.id,
+			damage: FPS_BULLET_DAMAGE,
+			killed,
+			playerId: player.id,
+		});
+	}
+}
+
+function fpsTicker() {
+	const now = Date.now();
+	const delta = (now - fpsLastTickTime) / 1000;
+	fpsLastTickTime = now;
+	fpsGameTick++;
+
+	// Clean up stale clients
+	for (const [id, ws] of fpsClients) {
+		if (ws.readyState !== 1) {
+			fpsClients.delete(id);
+			fpsPlayers.delete(id);
+		}
+	}
+	for (const id of fpsPlayers.keys()) {
+		if (!fpsClients.has(id)) fpsPlayers.delete(id);
+	}
+	if (fpsClients.size === 0) {
+		fpsStopGameLoop();
+		return;
+	}
+
+	// Handle respawns
+	for (const player of fpsPlayers.values()) {
+		if (!player.alive && player.respawnAt && now >= player.respawnAt) {
+			player.alive = true;
+			player.health = FPS_PLAYER_HEALTH;
+			player.respawnAt = null;
+			const pos = fpsRandomSpawnPos();
+			player.position = { x: pos.x, y: 1.7, z: pos.z };
+			broadcastFPS({ type: 'fps_player_respawned', playerId: player.id });
+		}
+	}
+
+	// Wave state machine
+	if (fpsWaveState === 'countdown') {
+		fpsWaveCountdown -= delta;
+		if (fpsWaveCountdown <= 0) {
+			fpsWaveNumber++;
+			fpsWaveState = 'active';
+			fpsSpawnWaveEnemies();
+			broadcastFPS({
+				type: 'fps_wave_start',
+				wave: {
+					number: fpsWaveNumber,
+					totalEnemies: fpsWaveEnemiesTotal,
+					enemiesRemaining: fpsWaveEnemiesTotal,
+					state: 'active',
+					countdownSeconds: 0,
+				},
+			});
+		}
+	} else if (fpsWaveState === 'active') {
+		// Move enemies toward nearest alive player
+		const alivePlayers = [...fpsPlayers.values()].filter((p) => p.alive);
+
+		for (const enemy of fpsEnemies.values()) {
+			if (!enemy.alive) continue;
+
+			if (alivePlayers.length === 0) continue;
+
+			// Find closest player
+			let closest: FPSPlayer | null = null;
+			let closestDist = Infinity;
+			for (const p of alivePlayers) {
+				const dx = p.position.x - enemy.position.x;
+				const dz = p.position.z - enemy.position.z;
+				const dist = Math.sqrt(dx * dx + dz * dz);
+				if (dist < closestDist) {
+					closestDist = dist;
+					closest = p;
+				}
+			}
+
+			if (!closest) continue;
+
+			if (closestDist <= FPS_ENEMY_ATTACK_RANGE) {
+				// Attack
+				if (now - enemy.lastAttackTime >= FPS_ENEMY_ATTACK_CD) {
+					enemy.lastAttackTime = now;
+					closest.health -= FPS_ENEMY_DAMAGE;
+					broadcastFPS({
+						type: 'fps_player_hit',
+						playerId: closest.id,
+						damage: FPS_ENEMY_DAMAGE,
+						enemyId: enemy.id,
+					});
+					if (closest.health <= 0) {
+						closest.health = 0;
+						closest.alive = false;
+						closest.respawnAt = now + FPS_RESPAWN_DELAY;
+						broadcastFPS({ type: 'fps_player_died', playerId: closest.id });
+					}
+				}
+			} else {
+				// Move toward player
+				const speed = FPS_ENEMY_CONFIG[enemy.type].speed;
+				const dx = closest.position.x - enemy.position.x;
+				const dz = closest.position.z - enemy.position.z;
+				const dist = Math.sqrt(dx * dx + dz * dz);
+				if (dist > 0) {
+					enemy.position.x += (dx / dist) * speed * delta;
+					enemy.position.z += (dz / dist) * speed * delta;
+				}
+			}
+		}
+
+		// Check if all enemies dead
+		const aliveEnemies = [...fpsEnemies.values()].filter((e) => e.alive);
+		if (aliveEnemies.length === 0) {
+			fpsWaveState = 'completed';
+			broadcastFPS({
+				type: 'fps_wave_complete',
+				wave: {
+					number: fpsWaveNumber,
+					totalEnemies: fpsWaveEnemiesTotal,
+					enemiesRemaining: 0,
+					state: 'completed',
+					countdownSeconds: 0,
+				},
+			});
+			// Prepare for next wave
+			fpsEnemies.clear();
+			fpsWaveState = 'countdown';
+			fpsWaveCountdown = FPS_WAVE_COUNTDOWN;
+		}
+
+		// Check game over: all players dead at once
+		const anyAlive = [...fpsPlayers.values()].some((p) => p.alive);
+		if (!anyAlive && fpsPlayers.size > 0) {
+			fpsGameOver = true;
+			const playerScores = [...fpsPlayers.values()].map((p) => ({
+				id: p.id,
+				name: p.name,
+				score: p.score,
+				kills: p.kills,
+			}));
+			broadcastFPS({
+				type: 'fps_game_over',
+				teamScore: fpsTeamScore,
+				playerScores,
+			});
+		}
+	}
+
+	// Broadcast state
+	const playersArr = [...fpsPlayers.values()].map((p) => ({
+		id: p.id,
+		name: p.name,
+		color: p.color,
+		position: p.position,
+		rotation: p.rotation,
+		health: p.health,
+		score: p.score,
+		kills: p.kills,
+		alive: p.alive,
+	}));
+	const enemiesArr = [...fpsEnemies.values()].map((e) => ({
+		id: e.id,
+		type: e.type,
+		position: e.position,
+		health: e.health,
+		maxHealth: e.maxHealth,
+		alive: e.alive,
+	}));
+	const aliveEnemyCount = enemiesArr.filter((e) => e.alive).length;
+
+	broadcastFPS({
+		type: 'fps_state',
+		tick: fpsGameTick,
+		timestamp: now,
+		players: playersArr,
+		enemies: enemiesArr,
+		wave: {
+			number: fpsWaveNumber,
+			totalEnemies: fpsWaveEnemiesTotal,
+			enemiesRemaining: aliveEnemyCount,
+			state: fpsWaveState,
+			countdownSeconds: Math.max(0, Math.ceil(fpsWaveCountdown)),
+		},
+		gameOver: fpsGameOver,
+		teamScore: fpsTeamScore,
+	});
+}
+
+function fpsStartGameLoop() {
+	if (fpsTickInterval) return;
+	fpsGameTick = 0;
+	fpsWaveNumber = 0;
+	fpsWaveState = 'countdown';
+	fpsWaveCountdown = FPS_WAVE_COUNTDOWN;
+	fpsWaveEnemiesTotal = 0;
+	fpsGameOver = false;
+	fpsTeamScore = 0;
+	fpsEnemies.clear();
+	fpsLastTickTime = Date.now();
+	fpsTickInterval = setInterval(fpsTicker, FPS_TICK_MS);
+	console.log('[fps] Game loop started');
+}
+
+function fpsStopGameLoop() {
+	if (fpsTickInterval) {
+		clearInterval(fpsTickInterval);
+		fpsTickInterval = null;
+		console.log('[fps] Game loop stopped');
+	}
+	fpsPlayers.clear();
+	fpsEnemies.clear();
+	fpsGameOver = false;
+}
+
+function fpsResetForPlayer() {
+	// If game was over and a player respawns/joins, restart waves
+	if (fpsGameOver) {
+		fpsGameOver = false;
+		fpsWaveNumber = 0;
+		fpsWaveState = 'countdown';
+		fpsWaveCountdown = FPS_WAVE_COUNTDOWN;
+		fpsWaveEnemiesTotal = 0;
+		fpsTeamScore = 0;
+		fpsEnemies.clear();
+		for (const p of fpsPlayers.values()) {
+			p.score = 0;
+			p.kills = 0;
+		}
+	}
+}
+
+function handleFPSDisconnect(ws: ServerWebSocket) {
+	const pid = ws.data.fpsPlayerId;
+	if (pid) {
+		const player = fpsPlayers.get(pid);
+		if (player) {
+			console.log(`[fps] ${player.name} (${pid}) left`);
+		}
+		fpsClients.delete(pid);
+		fpsPlayers.delete(pid);
+		broadcastFPSPlayerCount();
+
+		if (fpsClients.size === 0) {
+			fpsStopGameLoop();
+		}
+	}
+}
+
 // --- Server ---
 const server = Bun.serve({
 	port: WS_PORT,
 
 	fetch(req, server) {
 		const url = new URL(req.url);
+
+		if (url.pathname === '/ws/fps') {
+			const upgraded = server.upgrade<ClientData>(req, {
+				data: { kind: 'fps', sender: '', alive: true },
+			});
+			if (upgraded) return undefined;
+			return new Response('WebSocket upgrade failed', { status: 400 });
+		}
 
 		if (url.pathname === '/ws/snake') {
 			const upgraded = server.upgrade<ClientData>(req, {
@@ -451,6 +890,106 @@ const server = Bun.serve({
 				}
 
 				ws.send(JSON.stringify({ type: 'error', message: `Unknown game message: ${msg.type}` }));
+				return;
+			}
+
+			// --- FPS Game Messages ---
+			if (ws.data.kind === 'fps') {
+				if (msg.type === 'fps_join') {
+					const oldId = ws.data.fpsPlayerId;
+					if (oldId) {
+						fpsClients.delete(oldId);
+						fpsPlayers.delete(oldId);
+					}
+
+					const name = (msg.name || '').trim().slice(0, 20) || 'Soldier';
+					const color = (msg.color || '#22c55e').trim();
+					const pid = generatePlayerId();
+					ws.data.fpsPlayerId = pid;
+					fpsClients.set(pid, ws);
+
+					const spawnPos = fpsRandomSpawnPos();
+					fpsPlayers.set(pid, {
+						id: pid,
+						name,
+						color,
+						position: { x: spawnPos.x, y: 1.7, z: spawnPos.z },
+						rotation: { yaw: 0, pitch: 0 },
+						health: FPS_PLAYER_HEALTH,
+						score: 0,
+						kills: 0,
+						alive: true,
+						respawnAt: null,
+					});
+
+					ws.send(JSON.stringify({
+						type: 'fps_joined',
+						playerId: pid,
+						arena: { width: FPS_ARENA_WIDTH, depth: FPS_ARENA_DEPTH, height: FPS_ARENA_HEIGHT },
+						tickRate: FPS_TICK_RATE,
+					}));
+
+					fpsResetForPlayer();
+					fpsStartGameLoop();
+					broadcastFPSPlayerCount();
+					console.log(`[fps] ${name} (${pid}) joined`);
+					return;
+				}
+
+				if (msg.type === 'fps_move') {
+					const pid = ws.data.fpsPlayerId;
+					if (!pid) return;
+					const player = fpsPlayers.get(pid);
+					if (!player || !player.alive) return;
+					if (msg.position) {
+						player.position = {
+							x: Math.max(-FPS_ARENA_WIDTH / 2, Math.min(FPS_ARENA_WIDTH / 2, msg.position.x || 0)),
+							y: msg.position.y || 1.7,
+							z: Math.max(-FPS_ARENA_DEPTH / 2, Math.min(FPS_ARENA_DEPTH / 2, msg.position.z || 0)),
+						};
+					}
+					if (msg.rotation) {
+						player.rotation = { yaw: msg.rotation.yaw || 0, pitch: msg.rotation.pitch || 0 };
+					}
+					return;
+				}
+
+				if (msg.type === 'fps_shoot') {
+					const pid = ws.data.fpsPlayerId;
+					if (!pid) return;
+					const player = fpsPlayers.get(pid);
+					if (!player) return;
+					fpsHandleShoot(player, msg.origin, msg.direction);
+					return;
+				}
+
+				if (msg.type === 'fps_respawn') {
+					const pid = ws.data.fpsPlayerId;
+					if (!pid) return;
+					const player = fpsPlayers.get(pid);
+					if (player && !player.alive) {
+						player.alive = true;
+						player.health = FPS_PLAYER_HEALTH;
+						player.respawnAt = null;
+						const pos = fpsRandomSpawnPos();
+						player.position = { x: pos.x, y: 1.7, z: pos.z };
+						broadcastFPS({ type: 'fps_player_respawned', playerId: player.id });
+					}
+					fpsResetForPlayer();
+					return;
+				}
+
+				if (msg.type === 'fps_ping') {
+					ws.send(JSON.stringify({ type: 'fps_pong', t: msg.t }));
+					return;
+				}
+
+				if (msg.type === 'fps_leave') {
+					handleFPSDisconnect(ws);
+					return;
+				}
+
+				ws.send(JSON.stringify({ type: 'error', message: `Unknown FPS message: ${msg.type}` }));
 				return;
 			}
 
@@ -564,6 +1103,8 @@ const server = Bun.serve({
 		close(ws: ServerWebSocket) {
 			if (ws.data.kind === 'game') {
 				handleGameDisconnect(ws);
+			} else if (ws.data.kind === 'fps') {
+				handleFPSDisconnect(ws);
 			} else {
 				const sender = ws.data.sender;
 				chatClients.delete(ws);
@@ -617,6 +1158,17 @@ setInterval(() => {
 			console.log(`[snake] Terminating unresponsive game client: ${id}`);
 			ws.close();
 			handleGameDisconnect(ws);
+			continue;
+		}
+		ws.data.alive = false;
+		ws.ping();
+	}
+	// FPS clients
+	for (const [id, ws] of fpsClients) {
+		if (!ws.data.alive) {
+			console.log(`[fps] Terminating unresponsive FPS client: ${id}`);
+			ws.close();
+			handleFPSDisconnect(ws);
 			continue;
 		}
 		ws.data.alive = false;

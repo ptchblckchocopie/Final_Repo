@@ -13,8 +13,9 @@
 
 	const { children }: Props = $props();
 
+	const pathname = $derived($page.url.pathname);
 	const hideFooter = $derived(
-		$page.url.pathname === '/ticket-generator' || $page.url.pathname === '/dev-chat' || $page.url.pathname === '/snake-game'
+		pathname === '/ticket-generator' || pathname === '/dev-chat' || pathname === '/snake-game' || pathname === '/fps-game'
 	);
 </script>
 

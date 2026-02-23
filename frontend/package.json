@@ -21,6 +21,7 @@
 		"@tailwindcss/vite": "^4.1.18",
 		"@testing-library/jest-dom": "^6.9.1",
 		"@testing-library/svelte": "^5.3.1",
+		"@types/three": "^0.183.1",
 		"jsdom": "^28.1.0",
 		"svelte": "^5.49.2",
 		"svelte-check": "^4.3.6",
@@ -30,8 +31,11 @@
 		"vitest": "^4.0.18"
 	},
 	"dependencies": {
+		"@threlte/core": "^8.4.0",
+		"@threlte/extras": "^9.8.1",
 		"jsbarcode": "^3.12.3",
 		"jszip": "^3.10.1",
-		"qrious": "^4.0.2"
+		"qrious": "^4.0.2",
+		"three": "^0.183.1"
 	}
 }
